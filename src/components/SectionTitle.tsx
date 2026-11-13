@@ -82,6 +82,46 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
           '-=0.4'
         );
     }
+
+    if (section === 'indarra') {
+      // Indarra: Impacto seco, rápido y con peso de un hacha cayendo sobre madera noble
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+        defaults: { ease: 'power4.out' },
+      });
+
+      tl.fromTo(
+        '.title-badge',
+        { opacity: 0, y: -12 },
+        { opacity: 1, y: 0, duration: 0.3 }
+      )
+        .fromTo(
+          '.title-word',
+          {
+            yPercent: -130,
+            scaleY: 1.12,
+            opacity: 0,
+          },
+          {
+            yPercent: 0,
+            scaleY: 1,
+            opacity: 1,
+            duration: 0.45,
+            ease: 'power4.out',
+          },
+          '-=0.15'
+        )
+        .fromTo(
+          '.title-subtitle',
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+          '+=0.05'
+        );
+    }
   }, { scope: containerRef });
 
   return (
