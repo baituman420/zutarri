@@ -15,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
   };
 
   return (
-    <footer className="w-full bg-[#070809] border-t border-[#1a1c22] py-16 px-4 sm:px-6 lg:px-12 text-[#9ca3af]">
+    <footer className="w-full bg-[#070809] py-16 px-4 sm:px-6 lg:px-12 text-[#9ca3af]">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         {/* Brand & Mission */}
         <div className="space-y-2">
@@ -67,7 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
 
           {/* Linguistic Review Tag */}
           {t.reviewTag && (
-            <div className="max-w-xs text-[10px] font-mono text-[#d49b42]/70 leading-normal border-l border-[#d49b42]/40 pl-3">
+            <div className="max-w-xs text-[10px] font-mono text-[#d49b42]/70 leading-normal">
               {t.reviewTag}
             </div>
           )}

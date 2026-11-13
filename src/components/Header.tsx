@@ -42,8 +42,8 @@ export const Header: React.FC<HeaderProps> = ({
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-[#07080a]/95 backdrop-blur-md border-b border-white/10 py-2.5 sm:py-3 shadow-2xl'
-          : 'bg-transparent border-b border-transparent py-4 sm:py-6'
+          ? 'bg-[#07080a]/95 backdrop-blur-md py-2.5 sm:py-3 shadow-2xl'
+          : 'bg-transparent py-4 sm:py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -168,13 +168,13 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#07080a]/98 backdrop-blur-xl border-b border-white/10 px-6 py-5 flex flex-col gap-3.5 text-xs font-mono uppercase tracking-[0.2em]">
+        <div className="lg:hidden bg-[#07080a]/98 backdrop-blur-xl px-6 py-5 flex flex-col gap-3.5 text-xs font-mono uppercase tracking-[0.2em] shadow-2xl">
           {navLinks.map(link => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[#9ca3af] hover:text-white transition-colors py-1.5 border-b border-white/5"
+              className="text-[#9ca3af] hover:text-white transition-colors py-1.5"
             >
               {link.label}
             </a>
@@ -184,7 +184,7 @@ export const Header: React.FC<HeaderProps> = ({
               setMobileMenuOpen(false);
               onOpenMenuModal();
             }}
-            className="text-left text-[#d49b42] font-semibold flex items-center justify-between py-1.5 border-b border-white/5"
+            className="text-left text-[#d49b42] font-semibold flex items-center justify-between py-1.5"
           >
             <span>{t.nav.carta}</span>
             <ArrowUpRight className="w-4 h-4" />

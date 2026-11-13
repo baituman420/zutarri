@@ -200,7 +200,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       </div>
 
       {/* Top Meta Bar: Geographic Coordinates & Open Status */}
-      <div className="hero-top-meta relative z-10 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-white/10">
+      <div className="hero-top-meta relative z-10 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5">
         <div className="flex items-center gap-2.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-[#d49b42]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#d49b42] inline-block animate-pulse" />
           <span>01 // {t.hero.badge}</span>
@@ -294,7 +294,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       </div>
 
       {/* Bottom Scene Bar: Section Jump & Downward Cue to Sustraiak */}
-      <div className="hero-bottom-bar relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2.5 border-t border-white/10 text-xs font-mono text-[#9ca3af]">
+      <div className="hero-bottom-bar relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2.5 text-xs font-mono text-[#9ca3af]">
         <div className="flex flex-wrap items-center gap-3 sm:gap-6 uppercase tracking-[0.2em] text-[10px] sm:text-[11px]">
           <span className="text-white/30 hidden lg:inline">{t.hero.quickJump}</span>
           {[

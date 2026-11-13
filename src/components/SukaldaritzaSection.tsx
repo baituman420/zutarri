@@ -37,8 +37,8 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
       <div className="absolute inset-0 opacity-[0.025] pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
 
       <div className="max-w-7xl mx-auto">
-        {/* Section Header: Pure Editorial Typography (No Cards) */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/10">
+        {/* Section Header: Pure Editorial Typography (No Cards, No Lines) */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-4">
           <div>
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-2">
               {t.index}
@@ -63,7 +63,7 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
         </div>
 
         {/* Minimalist Typographic Category Selector (No pill cards) */}
-        <div className="flex flex-wrap items-center gap-6 sm:gap-10 mb-20 text-xs font-mono uppercase tracking-[0.25em] border-b border-white/10 pb-4">
+        <div className="flex flex-wrap items-center gap-6 sm:gap-10 mb-20 text-xs font-mono uppercase tracking-[0.25em] pb-2">
           {[
             { id: 'all' as CategoryFilter, label: t.allTab },
             { id: 'talo' as CategoryFilter, label: t.talosTab },
@@ -114,7 +114,7 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
                   <p className="font-sans text-base text-[#9ca3af] leading-relaxed">
                     {kruntxitalo.description[currentLang]}
                   </p>
-                  <p className="font-editorial italic text-lg text-[#d1d5db] border-l-2 border-[#d49b42] pl-4 py-1">
+                  <p className="font-editorial italic text-lg text-[#d49b42] py-1">
                     {kruntxitalo.notes?.[currentLang]}
                   </p>
                   <div className="pt-2">
@@ -193,7 +193,7 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
             </div>
 
             {/* SPREAD 3: Tríada de Barra, Pikoteoa & Postrea (No Cards, Pure Plates) */}
-            <div className="pt-8 border-t border-white/10">
+            <div className="pt-12">
               <div className="mb-12">
                 <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-1">
                   04 // BARRAKO TRADIZIOA & GOZOA
@@ -308,7 +308,7 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
         )}
 
         {/* Sourcing Footnote & Modal Action */}
-        <div className="mt-24 pt-8 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="mt-24 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="w-4 h-4 text-[#15803d] flex-shrink-0" />
             <p className="font-mono text-xs text-[#9ca3af]">

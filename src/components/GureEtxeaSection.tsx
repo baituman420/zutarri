@@ -38,7 +38,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20 pb-8 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
           <div>
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-2">
               {t.index}
@@ -70,7 +70,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
             <h3 className="font-display font-black text-3xl sm:text-4xl md:text-5xl text-[#f3f4f6] uppercase tracking-tight leading-[0.96]">
               {currentLang === 'eu' ? 'Harria, Sustraia eta Iraupena' : 'Piedra, Raíz y Permanencia'}
             </h3>
-            <p className="font-editorial italic text-xl text-[#d49b42] border-l-2 border-[#d49b42] pl-4">
+            <p className="font-editorial italic text-xl text-[#d49b42]">
               {currentLang === 'eu'
                 ? '«Zutarri: zuta eta harria. Zutik dirauen herri baten lekukoa.»'
                 : '«Zutarri: la columna y la piedra. Testigo de una comunidad que permanece en pie.»'}
@@ -115,7 +115,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
         </div>
 
         {/* The Hand-Painted Illustrated Mural Frieze */}
-        <div className="mb-24 pt-8 border-t border-white/10">
+        <div className="mb-24 pt-8">
           <div className="mb-12">
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-1">
               ARTEA & ONDAREA
@@ -151,9 +151,9 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
         </div>
 
         {/* Narrative & Community Roots (Zero Boxed Cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start pt-8 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start pt-8">
           <div className="space-y-6">
-            <p className="font-editorial text-xl sm:text-2xl text-[#f3f4f6] italic leading-relaxed border-l-2 border-[#d49b42] pl-4">
+            <p className="font-editorial text-xl sm:text-2xl text-[#f3f4f6] italic leading-relaxed">
               {t.body1}
             </p>
             <p className="font-sans text-base text-[#9ca3af] leading-relaxed">

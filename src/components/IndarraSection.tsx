@@ -28,10 +28,10 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
         <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-transparent to-[#07080a]/70 pointer-events-none" />
       </div>
 
-      {/* Top Scene Marker */}
-      <div className="relative z-10 w-full flex items-center justify-between pb-4 border-b border-white/10">
+      {/* Top Scene Marker: Floating text without divider lines */}
+      <div className="relative z-10 w-full flex items-center justify-between pb-2 text-[#9ca3af]">
         <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-[#f3f4f6]">
-          <span className="w-2 h-2 rounded-full bg-white inline-block animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white inline-block animate-pulse" />
           <span>{t.index}</span>
         </div>
         <span className="font-mono text-xs uppercase tracking-widest text-[#9ca3af] hidden sm:inline">
@@ -39,13 +39,13 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
         </span>
       </div>
 
-      {/* Narrative & Kinetic Principles Floating in the Scene (No Cards!) */}
+      {/* Narrative & Kinetic Principles Floating in the Scene (No Cards, No Lines!) */}
       <div className="relative z-10 my-auto py-8 max-w-2xl space-y-6">
         <h2 className="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-[#f3f4f6] uppercase leading-[0.96] drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
           {t.title}
         </h2>
 
-        <p className="font-editorial italic text-xl sm:text-2xl text-[#f3f4f6] border-l-2 border-white/60 pl-4 leading-snug drop-shadow-md">
+        <p className="font-editorial italic text-xl sm:text-2xl text-[#f3f4f6] leading-snug drop-shadow-md">
           {t.body1}
         </p>
 
@@ -53,8 +53,8 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
           {t.body2}
         </p>
 
-        {/* Kinetic Principles (Clean Editorial Layout, Zero Boxes) */}
-        <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-white/10">
+        {/* Kinetic Principles (Clean Editorial Layout, Zero Boxes, Zero Lines) */}
+        <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-8">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[#d49b42]">
               <Flame className="w-4 h-4 text-[#d49b42]" />
@@ -81,8 +81,8 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
         </div>
       </div>
 
-      {/* Bottom Scene Footnote */}
-      <div className="relative z-10 w-full flex items-center justify-between pt-4 border-t border-white/10 text-xs font-mono text-[#9ca3af]">
+      {/* Bottom Scene Footnote: Floating gracefully without divider lines */}
+      <div className="relative z-10 w-full flex items-center justify-between pt-2 text-xs font-mono text-[#9ca3af]">
         <div className="flex items-center gap-2">
           <span className="text-white">✦</span>
           <span>{t.caption}</span>

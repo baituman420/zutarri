@@ -42,7 +42,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
 
       <div className="relative z-10 max-w-7xl mx-auto w-full space-y-16">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] mb-3">
               <span className="w-2 h-2 rounded-full bg-[#d49b42] animate-pulse" />
@@ -116,7 +116,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
           </div>
 
           {/* Column 2: Location & Metro */}
-          <div className="space-y-6 md:border-l md:border-white/10 md:pl-10 lg:pl-14">
+          <div className="space-y-6 md:pl-6 lg:pl-10">
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9ca3af]">
               <MapPin className="w-4 h-4 text-[#d49b42]" />
               <span>{t.mapsLabel}</span>
@@ -155,17 +155,17 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
           </div>
 
           {/* Column 3: Hours & Official Social Media */}
-          <div className="space-y-6 md:border-l md:border-white/10 md:pl-10 lg:pl-14">
+          <div className="space-y-6 md:pl-6 lg:pl-10">
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9ca3af]">
               <Clock className="w-4 h-4 text-[#d49b42]" />
               <span>{t.hoursTitle}</span>
             </div>
             <div className="space-y-3 font-mono text-xs text-[#e5e7eb]">
-              <div className="pb-2 border-b border-white/10">
+              <div className="pb-2">
                 <span className="text-[#9ca3af] block text-[10px] uppercase">Bazkariak / Comidas</span>
                 <span className="font-semibold">{t.hoursLunch}</span>
               </div>
-              <div className="pb-2 border-b border-white/10">
+              <div className="pb-2">
                 <span className="text-[#9ca3af] block text-[10px] uppercase">Afariak / Cenas</span>
                 <span className="font-semibold">{t.hoursDinner}</span>
               </div>
@@ -176,7 +176,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
             </div>
 
             {/* Social Media Links: Instagram & Facebook */}
-            <div className="pt-4 border-t border-white/10 space-y-2">
+            <div className="pt-4 space-y-2">
               <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b7280] block">
                 SARE SOZIAL OFIZIALAK
               </span>
@@ -212,7 +212,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
         </div>
 
         {/* Public Legal / Author notice */}
-        <div className="pt-8 border-t border-white/10 flex items-start gap-3">
+        <div className="pt-8 flex items-start gap-3">
           <ShieldAlert className="w-4 h-4 text-[#d49b42] flex-shrink-0 mt-0.5" />
           <p className="font-mono text-[11px] text-[#6b7280] leading-relaxed">
             {t.legalNotice}
