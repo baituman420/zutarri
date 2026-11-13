@@ -67,7 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
 
           {/* Linguistic Review Tag */}
           {t.reviewTag && (
-            <div className="max-w-xs p-2 bg-[#121316] border border-[#262832] rounded-sm text-[10px] font-mono text-[#d49b42]/80 leading-normal">
+            <div className="max-w-xs text-[10px] font-mono text-[#d49b42]/70 leading-normal border-l border-[#d49b42]/40 pl-3">
               {t.reviewTag}
             </div>
           )}

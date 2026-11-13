@@ -47,19 +47,18 @@ export const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Brand Logo - Authentic Stone Logo */}
         <a
           href="#"
           className="group flex items-center gap-3 focus:outline-none focus:ring-1 focus:ring-white/40"
           aria-label="Zutarri Jatetxea Basauri"
         >
-          <div className="w-10 h-10 rounded-sm bg-[#16181b] border border-[#2e3138] flex items-center justify-center p-1 group-hover:border-white/40 transition-colors">
-            <svg viewBox="0 0 40 40" className="w-full h-full" fill="none">
-              <rect x="4" y="10" width="32" height="4" rx="1" fill="#f3f4f6" />
-              <rect x="7" y="18" width="26" height="4" rx="1" fill="#d49b42" />
-              <circle cx="16" cy="28" r="2.5" fill="#9ca3af" />
-              <circle cx="24" cy="28" r="2.5" fill="#9ca3af" />
-            </svg>
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-[#16181b] border border-white/20 flex items-center justify-center p-0.5 group-hover:border-[#d49b42] transition-colors shadow-md">
+            <img
+              src="./assets/logo-piedras.webp"
+              alt="Zutarri harrizko logotipo ofiziala"
+              className="w-full h-full object-cover rounded-full grayscale contrast-125 group-hover:scale-105 transition-transform duration-300"
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-display font-bold text-lg tracking-[0.25em] text-[#f3f4f6] group-hover:text-white transition-colors leading-tight">

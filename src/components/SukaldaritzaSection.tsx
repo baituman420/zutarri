@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, BookOpen, CheckCircle2, Sparkles } from 'lucide-react';
+import { ArrowUpRight, BookOpen, CheckCircle2 } from 'lucide-react';
 import { Language } from '../types';
 import { menuItems, translations } from '../data/translations';
 
@@ -21,7 +21,6 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
     ? menuItems
     : menuItems.filter(item => item.category === activeTab);
 
-  // Specific items for editorial showcase
   const kruntxitalo = menuItems.find(i => i.id === 'kruntxitalo');
   const taloRabas = menuItems.find(i => i.id === 'talo-rabas');
   const taloPanceta = menuItems.find(i => i.id === 'talo-panketa');
@@ -32,16 +31,19 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
   return (
     <section
       id="sukaldaritza"
-      className="relative w-full bg-[#0b0c0e] py-24 sm:py-32 px-4 sm:px-6 lg:px-12 border-t border-[#1d1f25] overflow-hidden"
+      className="relative w-full bg-[#08090c] py-28 sm:py-36 px-4 sm:px-8 lg:px-16 overflow-hidden select-none"
     >
+      {/* Background Subtle Slate Texture */}
+      <div className="absolute inset-0 opacity-[0.025] pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
+
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-6 border-b border-[#22252c]">
+        {/* Section Header: Pure Editorial Typography (No Cards) */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/10">
           <div>
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-2">
               {t.index}
             </span>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#f3f4f6] uppercase">
+            <h2 className="font-display font-black text-4xl sm:text-5xl md:text-6xl tracking-tight text-[#f3f4f6] uppercase leading-none">
               {t.title}
             </h2>
           </div>
@@ -51,7 +53,7 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
             </p>
             <button
               onClick={onOpenMenuModal}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#f3f4f6] hover:bg-[#d49b42] text-[#0c0d0e] hover:text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm cursor-pointer shadow-md"
+              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#d49b42] hover:text-white transition-colors cursor-pointer pt-1"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>{t.viewFullMenu}</span>
@@ -60,8 +62,8 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
           </div>
         </div>
 
-        {/* Category Tabs: Editorial Filter */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-12 border-b border-[#1f2127] pb-4">
+        {/* Minimalist Typographic Category Selector (No pill cards) */}
+        <div className="flex flex-wrap items-center gap-6 sm:gap-10 mb-20 text-xs font-mono uppercase tracking-[0.25em] border-b border-white/10 pb-4">
           {[
             { id: 'all' as CategoryFilter, label: t.allTab },
             { id: 'talo' as CategoryFilter, label: t.talosTab },
@@ -71,324 +73,252 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-sm font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+              className={`transition-all duration-300 cursor-pointer relative py-1 ${
                 activeTab === tab.id
-                  ? 'bg-[#f3f4f6] text-[#0c0d0e] font-bold shadow-md'
-                  : 'bg-[#141518] text-[#9ca3af] hover:text-white border border-[#252830] hover:border-[#3d414a]'
+                  ? 'text-[#f3f4f6] font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#d49b42]'
+                  : 'text-[#6b7280] hover:text-[#d1d5db]'
               }`}
             >
               {tab.label}
             </button>
           ))}
-          <span className="ml-auto font-mono text-[11px] text-[#6b7280] hidden md:inline">
+          <span className="ml-auto text-[11px] text-[#15803d] font-semibold tracking-wider hidden sm:inline">
             100% GLUTEN-FREE TALO AUKERA
           </span>
         </div>
 
-        {/* Dynamic Editorial Layout when 'all' is active: Magazine Rhythm */}
+        {/* Editorial Presentation: Full-Width Photographic Spreads */}
         {activeTab === 'all' && (
-          <div className="space-y-16">
-            {/* Feature 01: Grand Hero Spread for KRUNTXITALOA (Zutarri's Exclusive Dish) */}
+          <div className="space-y-32">
+            {/* SPREAD 1: Kruntxitaloa (Exclusive Author Creation) */}
             {kruntxitalo && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#111215] border border-[#242730] rounded-sm p-6 sm:p-10 shadow-2xl">
-                <div className="lg:col-span-7 relative aspect-[16/10] rounded-sm overflow-hidden bg-[#16181c] border border-[#2e313c] group">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="lg:col-span-7 relative aspect-[16/10] overflow-hidden group">
                   <img
                     src={kruntxitalo.image}
                     alt={kruntxitalo.name}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute top-4 left-4 bg-[#0c0d0e]/90 backdrop-blur-sm border border-[#2b2d35] px-3 py-1 rounded-[2px] flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5 text-[#d49b42]" />
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#e5e7eb]">
-                      {kruntxitalo.badge[currentLang]}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-4 right-4 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2.5 py-1 rounded-[2px] font-mono text-[10px] text-[#15803d] font-bold uppercase tracking-wider">
-                    Gluten-Free
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/80 via-transparent to-transparent pointer-events-none" />
                 </div>
 
-                <div className="lg:col-span-5 flex flex-col justify-center space-y-4">
-                  <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#d49b42]">
+                <div className="lg:col-span-5 space-y-5">
+                  <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42]">
                     <span>01 // SORKUNTZA BEREZIA</span>
                     <span className="text-[#3c404d]">·</span>
-                    <span>ZUTARRI RECIPE</span>
+                    <span className="text-[#15803d] font-bold">GLUTEN-FREE</span>
                   </div>
-                  <h3 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl text-[#f3f4f6] uppercase tracking-tight leading-tight">
+                  <h3 className="font-display font-black text-3xl sm:text-4xl md:text-5xl text-[#f3f4f6] uppercase tracking-tight leading-[0.98]">
                     {kruntxitalo.name}
                   </h3>
-                  <p className="font-sans text-sm sm:text-base text-[#9ca3af] leading-relaxed">
+                  <p className="font-sans text-base text-[#9ca3af] leading-relaxed">
                     {kruntxitalo.description[currentLang]}
                   </p>
-                  <p className="font-editorial italic text-base text-[#d1d5db] border-l-2 border-[#d49b42] pl-3 py-1">
+                  <p className="font-editorial italic text-lg text-[#d1d5db] border-l-2 border-[#d49b42] pl-4 py-1">
                     {kruntxitalo.notes?.[currentLang]}
                   </p>
-                  <div className="pt-4 flex items-center gap-4 text-xs font-mono">
+                  <div className="pt-2">
                     <button
                       onClick={onOpenMenuModal}
-                      className="text-[#d49b42] hover:text-[#f3f4f6] underline cursor-pointer"
+                      className="text-xs font-mono uppercase tracking-widest text-[#d49b42] hover:text-white underline cursor-pointer"
                     >
                       Kartan ikusi &rarr;
                     </button>
-                    <span className="text-[#4b505c]">·</span>
-                    <span className="text-[#6b7280]">Egunero eskuz oratua</span>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Feature 02: Asymmetric Two-Column Spread: Talo de Rabas vs. Talo de Hirugiharra */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* SPREAD 2: Talo de Rabas & Talo de Hirugiharra (Alternating Rhythm) */}
+            <div className="space-y-28">
               {/* Talo de Rabas */}
               {taloRabas && (
-                <div className="bg-[#121316] border border-[#22252d] rounded-sm p-6 sm:p-8 flex flex-col justify-between group hover:border-[#383c47] transition-all">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[16/11] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
-                      <img
-                        src={taloRabas.image}
-                        alt={taloRabas.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2.5 py-0.5 rounded-[2px] font-mono text-[9px] uppercase tracking-wider text-[#d49b42]">
-                        {taloRabas.badge[currentLang]}
-                      </div>
-                    </div>
-
-                    <div className="pt-2">
-                      <span className="font-mono text-[10px] text-[#6b7280] uppercase tracking-widest block mb-1">
-                        02 // ITSASOA ETA BURDINA
-                      </span>
-                      <h4 className="font-display font-bold text-xl sm:text-2xl text-[#f3f4f6] uppercase tracking-tight">
-                        {taloRabas.name}
-                      </h4>
-                      <p className="font-sans text-xs sm:text-sm text-[#9ca3af] mt-2 leading-relaxed">
-                        {taloRabas.description[currentLang]}
-                      </p>
-                    </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                  <div className="lg:col-span-5 order-2 lg:order-1 space-y-5">
+                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block">
+                      02 // ITSASOA ETA BURDINA
+                    </span>
+                    <h3 className="font-display font-black text-3xl sm:text-4xl text-[#f3f4f6] uppercase tracking-tight leading-tight">
+                      {taloRabas.name}
+                    </h3>
+                    <p className="font-sans text-base text-[#9ca3af] leading-relaxed">
+                      {taloRabas.description[currentLang]}
+                    </p>
+                    <p className="font-editorial italic text-base text-[#6b7280]">
+                      {taloRabas.notes?.[currentLang]}
+                    </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-[#1f2127] flex items-center justify-between text-xs font-editorial italic text-[#6b7280]">
-                    <span>{taloRabas.notes?.[currentLang]}</span>
-                    <span className="font-mono text-[10px] uppercase text-[#d49b42] not-italic">Bizkaia</span>
+                  <div className="lg:col-span-7 order-1 lg:order-2 relative aspect-[16/10] overflow-hidden group">
+                    <img
+                      src={taloRabas.image}
+                      alt={taloRabas.name}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/80 via-transparent to-transparent pointer-events-none" />
                   </div>
                 </div>
               )}
 
               {/* Talo de Hirugiharra Glazeatua */}
               {taloPanceta && (
-                <div className="bg-[#121316] border border-[#22252d] rounded-sm p-6 sm:p-8 flex flex-col justify-between group hover:border-[#383c47] transition-all">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[16/11] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
-                      <img
-                        src={taloPanceta.image}
-                        alt={taloPanceta.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2.5 py-0.5 rounded-[2px] font-mono text-[9px] uppercase tracking-wider text-[#d49b42]">
-                        {taloPanceta.badge[currentLang]}
-                      </div>
-                      <div className="absolute top-3 right-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#15803d] font-bold uppercase">
-                        GF
-                      </div>
-                    </div>
-
-                    <div className="pt-2">
-                      <span className="font-mono text-[10px] text-[#6b7280] uppercase tracking-widest block mb-1">
-                        03 // MAR Y MONTAÑA
-                      </span>
-                      <h4 className="font-display font-bold text-xl sm:text-2xl text-[#f3f4f6] uppercase tracking-tight">
-                        {taloPanceta.name}
-                      </h4>
-                      <p className="font-sans text-xs sm:text-sm text-[#9ca3af] mt-2 leading-relaxed">
-                        {taloPanceta.description[currentLang]}
-                      </p>
-                    </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                  <div className="lg:col-span-7 relative aspect-[16/10] overflow-hidden group">
+                    <img
+                      src={taloPanceta.image}
+                      alt={taloPanceta.name}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/80 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-[#1f2127] flex items-center justify-between text-xs font-editorial italic text-[#6b7280]">
-                    <span>{taloPanceta.notes?.[currentLang]}</span>
-                    <span className="font-mono text-[10px] uppercase text-[#d49b42] not-italic">Basauri</span>
+                  <div className="lg:col-span-5 space-y-5">
+                    <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42]">
+                      <span>03 // HARAGIA ETA ITSASOA</span>
+                      <span className="text-[#3c404d]">·</span>
+                      <span className="text-[#15803d] font-bold">GLUTEN-FREE</span>
+                    </div>
+                    <h3 className="font-display font-black text-3xl sm:text-4xl text-[#f3f4f6] uppercase tracking-tight leading-tight">
+                      {taloPanceta.name}
+                    </h3>
+                    <p className="font-sans text-base text-[#9ca3af] leading-relaxed">
+                      {taloPanceta.description[currentLang]}
+                    </p>
+                    <p className="font-editorial italic text-base text-[#6b7280]">
+                      {taloPanceta.notes?.[currentLang]}
+                    </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Feature 03: Rhythmic Triad: Gildak + Totopos con Idiazabal + Basque Cheesecake */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Gildas */}
-              {gildas && (
-                <div className="bg-[#121316] border border-[#22252d] rounded-sm p-6 flex flex-col justify-between group hover:border-[#383c47] transition-all">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
+            {/* SPREAD 3: Tríada de Barra, Pikoteoa & Postrea (No Cards, Pure Plates) */}
+            <div className="pt-8 border-t border-white/10">
+              <div className="mb-12">
+                <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] block mb-1">
+                  04 // BARRAKO TRADIZIOA & GOZOA
+                </span>
+                <h4 className="font-display font-bold text-2xl text-[#f3f4f6] uppercase">
+                  Pikoteoa eta Etxeko Postrea
+                </h4>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                {gildas && (
+                  <div className="space-y-4 group">
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <img
                         src={gildas.image}
                         alt={gildas.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#d49b42] uppercase">
-                        {gildas.badge[currentLang]}
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/70 via-transparent to-transparent pointer-events-none" />
                     </div>
-                    <div>
-                      <h4 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
-                        {gildas.name}
-                      </h4>
-                      <p className="font-sans text-xs text-[#9ca3af] mt-1.5 leading-relaxed">
-                        {gildas.description[currentLang]}
-                      </p>
-                    </div>
+                    <h5 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
+                      {gildas.name}
+                    </h5>
+                    <p className="font-sans text-xs text-[#9ca3af] leading-relaxed">
+                      {gildas.description[currentLang]}
+                    </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-[#1f2127] text-[11px] font-editorial italic text-[#6b7280]">
-                    {gildas.notes?.[currentLang]}
-                  </div>
-                </div>
-              )}
+                )}
 
-              {/* Totopos Idiazabal */}
-              {totopos && (
-                <div className="bg-[#121316] border border-[#22252d] rounded-sm p-6 flex flex-col justify-between group hover:border-[#383c47] transition-all">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
+                {totopos && (
+                  <div className="space-y-4 group">
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <img
                         src={totopos.image}
                         alt={totopos.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#d49b42] uppercase">
-                        {totopos.badge[currentLang]}
-                      </div>
-                      <div className="absolute top-3 right-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#15803d] font-bold uppercase">
-                        GF
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/70 via-transparent to-transparent pointer-events-none" />
                     </div>
-                    <div>
-                      <h4 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
+                    <div className="flex items-center justify-between">
+                      <h5 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
                         {totopos.name}
-                      </h4>
-                      <p className="font-sans text-xs text-[#9ca3af] mt-1.5 leading-relaxed">
-                        {totopos.description[currentLang]}
-                      </p>
+                      </h5>
+                      <span className="text-[10px] font-mono text-[#15803d] font-bold">GF</span>
                     </div>
+                    <p className="font-sans text-xs text-[#9ca3af] leading-relaxed">
+                      {totopos.description[currentLang]}
+                    </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-[#1f2127] text-[11px] font-editorial italic text-[#6b7280]">
-                    {totopos.notes?.[currentLang]}
-                  </div>
-                </div>
-              )}
+                )}
 
-              {/* Tarta de Queso */}
-              {tartaQueso && (
-                <div className="bg-[#121316] border border-[#22252d] rounded-sm p-6 flex flex-col justify-between group hover:border-[#383c47] transition-all">
-                  <div className="space-y-4">
-                    <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
+                {tartaQueso && (
+                  <div className="space-y-4 group">
+                    <div className="relative aspect-[4/3] overflow-hidden">
                       <img
                         src={tartaQueso.image}
                         alt={tartaQueso.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#d49b42] uppercase">
-                        {tartaQueso.badge[currentLang]}
-                      </div>
-                      <div className="absolute top-3 right-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#15803d] font-bold uppercase">
-                        GF
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/70 via-transparent to-transparent pointer-events-none" />
                     </div>
-                    <div>
-                      <h4 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
+                    <div className="flex items-center justify-between">
+                      <h5 className="font-display font-bold text-lg text-[#f3f4f6] uppercase">
                         {tartaQueso.name}
-                      </h4>
-                      <p className="font-sans text-xs text-[#9ca3af] mt-1.5 leading-relaxed">
-                        {tartaQueso.description[currentLang]}
-                      </p>
+                      </h5>
+                      <span className="text-[10px] font-mono text-[#15803d] font-bold">GF</span>
                     </div>
+                    <p className="font-sans text-xs text-[#9ca3af] leading-relaxed">
+                      {tartaQueso.description[currentLang]}
+                    </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-[#1f2127] text-[11px] font-editorial italic text-[#6b7280]">
-                    {tartaQueso.notes?.[currentLang]}
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Tab Filtered View (when a specific category is selected) */}
+        {/* Tab Filtered View (When category is selected) */}
         {activeTab !== 'all' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item, index) => (
-              <div
-                key={item.id}
-                className="bg-[#121316] border border-[#22252d] rounded-sm p-6 flex flex-col justify-between group hover:border-[#383c47] transition-all"
-              >
-                <div className="space-y-4">
-                  {item.image && (
-                    <div className="relative aspect-[16/10] rounded-sm overflow-hidden bg-[#16181c] border border-[#272a33]">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute top-3 left-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#d49b42] uppercase">
-                        {item.badge[currentLang]}
-                      </div>
-                      {item.glutenFree && (
-                        <div className="absolute top-3 right-3 bg-[#0c0d0e]/90 border border-[#2b2d35] px-2 py-0.5 rounded-[2px] font-mono text-[9px] text-[#15803d] font-bold uppercase">
-                          GF
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div>
-                    <span className="font-mono text-[10px] text-[#6b7280] uppercase tracking-widest block mb-1">
-                      0{index + 1} // {item.category?.toUpperCase()}
-                    </span>
-                    <h4 className="font-display font-bold text-xl text-[#f3f4f6] uppercase">
-                      {item.name}
-                    </h4>
-                    <p className="font-sans text-xs sm:text-sm text-[#9ca3af] mt-2 leading-relaxed">
-                      {item.description[currentLang]}
-                    </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {filteredItems.map(item => (
+              <div key={item.id} className="space-y-4 group">
+                {item.image && (
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08090c]/80 via-transparent to-transparent pointer-events-none" />
                   </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <h4 className="font-display font-bold text-xl text-[#f3f4f6] uppercase">
+                    {item.name}
+                  </h4>
+                  {item.glutenFree && (
+                    <span className="text-[10px] font-mono text-[#15803d] font-bold">GF</span>
+                  )}
                 </div>
-
-                <div className="mt-6 pt-3 border-t border-[#1f2127] flex items-center justify-between text-xs font-editorial italic text-[#6b7280]">
-                  <span>{item.notes?.[currentLang]}</span>
-                  <button
-                    onClick={onOpenMenuModal}
-                    className="not-italic font-mono text-[10px] uppercase text-[#d49b42] hover:underline"
-                  >
-                    Xehetasunak &rarr;
-                  </button>
-                </div>
+                <p className="font-sans text-xs text-[#9ca3af] leading-relaxed">
+                  {item.description[currentLang]}
+                </p>
+                {item.notes && (
+                  <p className="font-editorial italic text-xs text-[#6b7280]">
+                    {item.notes[currentLang]}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         )}
 
-        {/* Bottom Editorial Allergen / Sourcing Bar */}
-        <div className="mt-16 p-6 sm:p-8 bg-[#131418] border border-[#252832] rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-[#15803d] flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-[#f3f4f6] font-bold">
-                100% Gluten-Free Arto-Oinarria
-              </h4>
-              <p className="font-mono text-xs text-[#9ca3af] mt-1 leading-relaxed">
-                {t.editorialNote}
-              </p>
-            </div>
+        {/* Sourcing Footnote & Modal Action */}
+        <div className="mt-24 pt-8 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-4 h-4 text-[#15803d] flex-shrink-0" />
+            <p className="font-mono text-xs text-[#9ca3af]">
+              {t.editorialNote}
+            </p>
           </div>
 
           <button
             onClick={onOpenMenuModal}
-            className="px-6 py-3 bg-[#f3f4f6] hover:bg-[#d49b42] text-[#0c0d0e] hover:text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm cursor-pointer whitespace-nowrap shadow-md"
+            className="px-6 py-3.5 bg-[#f3f4f6] hover:bg-[#d49b42] text-[#07080a] hover:text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm cursor-pointer whitespace-nowrap shadow-xl"
           >
             {t.viewFullMenu} &rarr;
           </button>

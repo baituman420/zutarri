@@ -26,38 +26,37 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
   return (
     <section
       id="kontaktua"
-      className="relative w-full min-h-[90vh] py-28 sm:py-36 px-4 sm:px-6 lg:px-12 overflow-hidden flex flex-col justify-between"
+      className="relative w-full min-h-screen py-28 sm:py-36 px-4 sm:px-8 lg:px-16 overflow-hidden flex flex-col justify-between bg-[#07080a] select-none"
     >
-      {/* Cinematic Monumental Background: Txalaparta B&W Bleed */}
+      {/* Monumental Cinematic Background: Txalaparta B&W Bleed */}
       <div className="absolute inset-0 z-0">
         <img
           src="./assets/txalaparta-hero.jpg"
           alt="Txalaparta tradizionala zurezko oholekin eta makilekin zuri-beltzean"
-          className="w-full h-full object-cover grayscale contrast-130 brightness-[0.38] scale-105"
+          className="w-full h-full object-cover object-center grayscale contrast-130 brightness-[0.38] scale-102"
         />
-        {/* Layered Cinematic Vignettes for Flawless Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-[#0b0c0e]/85 to-[#0b0c0e]/95" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-transparent to-[#07080a]/95" />
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
+        {/* Soft Chiaroscuro Atmospheric Vignettes (No boxes or card borders) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-[#07080a]/75 to-[#07080a]/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#07080a]/90 via-transparent to-[#07080a]/90 pointer-events-none" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full">
-        {/* Monumental Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
+      <div className="relative z-10 max-w-7xl mx-auto w-full space-y-16">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-[#d49b42] mb-3">
               <span className="w-2 h-2 rounded-full bg-[#d49b42] animate-pulse" />
               <span>{t.index}</span>
             </div>
-            <h2 className="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-[#f3f4f6] uppercase leading-none">
+            <h2 className="font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#f3f4f6] uppercase leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
               {t.title}
             </h2>
-            <p className="font-editorial italic text-xl sm:text-2xl text-[#d1d5db] mt-3">
+            <p className="font-editorial italic text-2xl sm:text-3xl text-[#d49b42] mt-3">
               «{t.tagline}»
             </p>
           </div>
 
-          <div className="flex flex-col items-start md:items-end text-left md:text-right font-mono text-xs text-[#9ca3af] space-y-2">
+          <div className="flex flex-col items-start md:items-end font-mono text-xs text-[#9ca3af] space-y-2">
             <span className="text-[#f3f4f6] font-medium text-sm tracking-wider">
               {t.lead}
             </span>
@@ -65,10 +64,10 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
             {playWoodStrike && (
               <button
                 onClick={handleTxalapartaSound}
-                className={`mt-2 px-3 py-1.5 rounded-sm border text-[11px] font-mono uppercase tracking-widest flex items-center gap-2 transition-all cursor-pointer ${
+                className={`mt-2 px-3.5 py-2 rounded-sm border text-[11px] font-mono uppercase tracking-widest flex items-center gap-2 transition-all cursor-pointer ${
                   soundPulsing
-                    ? 'bg-[#d49b42] text-[#0c0d0e] border-[#d49b42]'
-                    : 'bg-[#141518]/80 text-[#9ca3af] border-white/10 hover:text-white hover:border-white/30'
+                    ? 'bg-[#d49b42] text-[#07080a] border-[#d49b42]'
+                    : 'bg-white/5 text-[#d1d5db] border-white/20 hover:text-white hover:border-white/50 backdrop-blur-sm'
                 }`}
                 title="Txalapartaren oihartzuna entzun"
               >
@@ -79,27 +78,25 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
           </div>
         </div>
 
-        {/* 3-Column Architectural Cards: Reservations, Location, Hours & Social */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Card 1: Direct Verified Booking (NO fake forms) */}
-          <div className="bg-[#0e1014]/90 backdrop-blur-md border border-white/[0.08] p-7 sm:p-9 rounded-sm flex flex-col justify-between space-y-6 shadow-2xl">
-            <div>
-              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#d49b42] mb-3">
-                <Phone className="w-4 h-4 text-[#d49b42]" />
-                <span>{t.phoneLabel}</span>
-              </div>
-              <h3 className="font-display font-bold text-2xl text-[#f3f4f6] uppercase">
-                {currentLang === 'eu' ? 'Mahai Erreserba Zuzena' : 'Reserva Directa'}
-              </h3>
-              <p className="font-editorial text-sm sm:text-base text-[#9ca3af] italic mt-3 leading-relaxed">
-                {t.bookingNote}
-              </p>
+        {/* 3 Editorial Columns Floating Organically in the Scene (NO CARD CONTAINERS) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 pt-4">
+          {/* Column 1: Direct Reservations */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#d49b42]">
+              <Phone className="w-4 h-4 text-[#d49b42]" />
+              <span>{t.phoneLabel}</span>
             </div>
+            <h3 className="font-display font-black text-2xl sm:text-3xl text-[#f3f4f6] uppercase tracking-tight">
+              {currentLang === 'eu' ? 'Mahai Erreserbak' : 'Reservas Directas'}
+            </h3>
+            <p className="font-editorial text-base text-[#c5c9d3] italic leading-relaxed">
+              {t.bookingNote}
+            </p>
 
-            <div className="space-y-3 pt-6 border-t border-white/[0.08]">
+            <div className="space-y-3 pt-2">
               <a
                 href={t.phoneLink}
-                className="w-full py-3.5 px-4 bg-[#f3f4f6] hover:bg-[#d49b42] text-[#0c0d0e] hover:text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5 shadow-lg"
+                className="w-full py-4 px-5 bg-[#f3f4f6] hover:bg-[#d49b42] text-[#07080a] hover:text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5 shadow-2xl"
               >
                 <Phone className="w-4 h-4" />
                 <span>{t.callCta}</span>
@@ -109,7 +106,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
                 href={t.whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 bg-[#14171d] hover:bg-[#1c2028] text-[#f3f4f6] border border-white/10 font-mono text-xs uppercase tracking-widest transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5"
+                className="w-full py-3.5 px-5 bg-white/5 hover:bg-white/10 text-[#f3f4f6] border border-white/20 hover:border-white/40 font-mono text-xs uppercase tracking-widest transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5 backdrop-blur-sm"
               >
                 <MessageCircle className="w-4 h-4 text-[#15803d]" />
                 <span>{t.whatsappText}</span>
@@ -118,39 +115,37 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
             </div>
           </div>
 
-          {/* Card 2: Location, Metro & Google Maps */}
-          <div className="bg-[#0e1014]/90 backdrop-blur-md border border-white/[0.08] p-7 sm:p-9 rounded-sm flex flex-col justify-between space-y-6 shadow-2xl">
-            <div>
-              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#9ca3af] mb-3">
-                <MapPin className="w-4 h-4 text-[#d49b42]" />
-                <span>{t.mapsLabel}</span>
-              </div>
-              <h3 className="font-display font-bold text-2xl text-[#f3f4f6] uppercase">
-                Bentako Plaza, 3
-              </h3>
-              <p className="font-mono text-xs text-[#9ca3af] mt-1.5">
-                48970 Basauri, Bizkaia
-              </p>
+          {/* Column 2: Location & Metro */}
+          <div className="space-y-6 md:border-l md:border-white/10 md:pl-10 lg:pl-14">
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9ca3af]">
+              <MapPin className="w-4 h-4 text-[#d49b42]" />
+              <span>{t.mapsLabel}</span>
+            </div>
+            <h3 className="font-display font-black text-2xl sm:text-3xl text-[#f3f4f6] uppercase tracking-tight">
+              Bentako Plaza, 3
+            </h3>
+            <p className="font-mono text-xs text-[#9ca3af]">
+              48970 Basauri, Bizkaia
+            </p>
 
-              <div className="mt-5 pt-5 border-t border-white/[0.08] space-y-2.5">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#e5e7eb]">
-                  <Train className="w-4 h-4 text-[#d49b42]" />
-                  <span>{t.metroDesc}</span>
-                </div>
-                <p className="font-mono text-[11px] text-[#6b7280]">
-                  {currentLang === 'eu'
-                    ? 'Bilboko zentroari lotuta (Abando - Ariz 12 minutu).'
-                    : 'Conexión directa con Bilbao centro (Abando - Ariz 12 min).'}
-                </p>
+            <div className="pt-2 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#e5e7eb]">
+                <Train className="w-4 h-4 text-[#d49b42]" />
+                <span>{t.metroDesc}</span>
               </div>
+              <p className="font-mono text-[11px] text-[#6b7280] leading-relaxed">
+                {currentLang === 'eu'
+                  ? 'Bilboko zentroari zuzenean lotuta (Abando - Ariz 12 minutu).'
+                  : 'Conexión directa con Bilbao centro (Abando - Ariz 12 minutos).'}
+              </p>
             </div>
 
-            <div className="pt-6 border-t border-white/[0.08]">
+            <div className="pt-2">
               <a
                 href={t.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 bg-[#14171d] hover:bg-[#1c2028] text-[#f3f4f6] border border-white/10 font-mono text-xs uppercase tracking-widest transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5"
+                className="w-full py-3.5 px-5 bg-white/5 hover:bg-white/10 text-[#f3f4f6] border border-white/20 hover:border-white/40 font-mono text-xs uppercase tracking-widest transition-all duration-300 rounded-sm flex items-center justify-center gap-2.5 backdrop-blur-sm"
               >
                 <MapPin className="w-4 h-4 text-[#d49b42]" />
                 <span>Google Maps-en Ireki</span>
@@ -159,40 +154,38 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
             </div>
           </div>
 
-          {/* Card 3: Opening Hours & Official Social Media */}
-          <div className="bg-[#0e1014]/90 backdrop-blur-md border border-white/[0.08] p-7 sm:p-9 rounded-sm flex flex-col justify-between space-y-6 shadow-2xl">
-            <div>
-              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#9ca3af] mb-3">
-                <Clock className="w-4 h-4 text-[#d49b42]" />
-                <span>{t.hoursTitle}</span>
+          {/* Column 3: Hours & Official Social Media */}
+          <div className="space-y-6 md:border-l md:border-white/10 md:pl-10 lg:pl-14">
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#9ca3af]">
+              <Clock className="w-4 h-4 text-[#d49b42]" />
+              <span>{t.hoursTitle}</span>
+            </div>
+            <div className="space-y-3 font-mono text-xs text-[#e5e7eb]">
+              <div className="pb-2 border-b border-white/10">
+                <span className="text-[#9ca3af] block text-[10px] uppercase">Bazkariak / Comidas</span>
+                <span className="font-semibold">{t.hoursLunch}</span>
               </div>
-              <div className="space-y-3 font-mono text-xs text-[#e5e7eb]">
-                <div className="pb-2.5 border-b border-white/[0.08]">
-                  <span className="text-[#9ca3af] block text-[10px] uppercase">Bazkariak / Comidas</span>
-                  <span className="font-semibold">{t.hoursLunch}</span>
-                </div>
-                <div className="pb-2.5 border-b border-white/[0.08]">
-                  <span className="text-[#9ca3af] block text-[10px] uppercase">Afariak / Cenas</span>
-                  <span className="font-semibold">{t.hoursDinner}</span>
-                </div>
-                <div>
-                  <span className="text-[#dc2626] block text-[10px] uppercase font-bold">Atsedena / Descanso</span>
-                  <span className="text-[#6b7280] italic">{t.hoursClosed}</span>
-                </div>
+              <div className="pb-2 border-b border-white/10">
+                <span className="text-[#9ca3af] block text-[10px] uppercase">Afariak / Cenas</span>
+                <span className="font-semibold">{t.hoursDinner}</span>
+              </div>
+              <div>
+                <span className="text-[#dc2626] block text-[10px] uppercase font-bold">Atsedena / Descanso</span>
+                <span className="text-[#6b7280] italic">{t.hoursClosed}</span>
               </div>
             </div>
 
             {/* Social Media Links: Instagram & Facebook */}
-            <div className="pt-6 border-t border-white/[0.08] space-y-2.5">
-              <div className="font-mono text-[10px] uppercase tracking-wider text-[#6b7280] mb-2">
+            <div className="pt-4 border-t border-white/10 space-y-2">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b7280] block">
                 SARE SOZIAL OFIZIALAK
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
+              </span>
+              <div className="grid grid-cols-2 gap-3">
                 <a
                   href={t.instagramLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2.5 px-3 bg-[#14171d] hover:bg-[#1c2028] text-[#f3f4f6] border border-white/10 font-mono text-[11px] uppercase tracking-wider transition-all duration-300 rounded-sm flex items-center justify-center gap-2"
+                  className="py-3 px-3 bg-white/5 hover:bg-white/10 text-[#f3f4f6] border border-white/15 hover:border-white/40 font-mono text-[11px] uppercase tracking-wider transition-all duration-300 rounded-sm flex items-center justify-center gap-2 backdrop-blur-sm"
                 >
                   <svg className="w-3.5 h-3.5 text-[#d49b42]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -206,7 +199,7 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
                   href={t.facebookLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2.5 px-3 bg-[#14171d] hover:bg-[#1c2028] text-[#f3f4f6] border border-white/10 font-mono text-[11px] uppercase tracking-wider transition-all duration-300 rounded-sm flex items-center justify-center gap-2"
+                  className="py-3 px-3 bg-white/5 hover:bg-white/10 text-[#f3f4f6] border border-white/15 hover:border-white/40 font-mono text-[11px] uppercase tracking-wider transition-all duration-300 rounded-sm flex items-center justify-center gap-2 backdrop-blur-sm"
                 >
                   <svg className="w-3.5 h-3.5 text-[#d49b42]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -218,8 +211,8 @@ export const KontaktuaSection: React.FC<KontaktuaSectionProps> = ({
           </div>
         </div>
 
-        {/* Public Legal / Author notice regarding demo resources */}
-        <div className="mt-12 p-4 bg-[#0a0c0f]/90 border border-white/[0.06] rounded-sm flex items-start gap-3">
+        {/* Public Legal / Author notice */}
+        <div className="pt-8 border-t border-white/10 flex items-start gap-3">
           <ShieldAlert className="w-4 h-4 text-[#d49b42] flex-shrink-0 mt-0.5" />
           <p className="font-mono text-[11px] text-[#6b7280] leading-relaxed">
             {t.legalNotice}
