@@ -141,6 +141,36 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
+          {/* Social Links: Instagram & Facebook */}
+          <div className="hidden sm:flex items-center gap-1.5">
+            <a
+              href="https://www.instagram.com/zutarri_jatetxea/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-sm border border-[#282a30] bg-[#141518]/80 text-[#848a96] hover:text-[#e5e7eb] hover:border-[#3d414a] transition-colors"
+              aria-label="Instagram Zutarri Jatetxea"
+              title="Instagram @zutarri_jatetxea"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+              </svg>
+            </a>
+            <a
+              href="https://www.facebook.com/zutarrijatetxea"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 rounded-sm border border-[#282a30] bg-[#141518]/80 text-[#848a96] hover:text-[#e5e7eb] hover:border-[#3d414a] transition-colors"
+              aria-label="Facebook Zutarri Jatetxea"
+              title="Facebook Zutarri Jatetxea"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+            </a>
+          </div>
+
           {/* Quick Reservation Button */}
           <a
             href="tel:+34688766398"
@@ -192,6 +222,27 @@ export const Header: React.FC<HeaderProps> = ({
             <Phone className="w-3.5 h-3.5" />
             <span>{t.nav.erreserbatu} (688 76 63 98)</span>
           </a>
+          <div className="flex items-center justify-center gap-6 pt-2 border-t border-[#1b1c20]">
+            <a
+              href="https://www.instagram.com/zutarri_jatetxea/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-[#9ca3af] hover:text-white flex items-center gap-2"
+            >
+              <span>Instagram</span>
+              <ArrowUpRight className="w-3 h-3 opacity-60" />
+            </a>
+            <span className="text-[#3a3d46]">·</span>
+            <a
+              href="https://www.facebook.com/zutarrijatetxea"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-[#9ca3af] hover:text-white flex items-center gap-2"
+            >
+              <span>Facebook</span>
+              <ArrowUpRight className="w-3 h-3 opacity-60" />
+            </a>
+          </div>
         </div>
       )}
     </header>

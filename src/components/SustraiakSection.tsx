@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info } from 'lucide-react';
+import { Info, Sparkles } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
 
@@ -31,30 +31,29 @@ export const SustraiakSection: React.FC<SustraiakSectionProps> = ({ currentLang 
           </p>
         </div>
 
-        {/* Asymmetrical Editorial Grid */}
+        {/* Asymmetrical Editorial Composition */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Visual Column: Selective Color Documentary Masterpiece (7 cols) */}
-          <div className="lg:col-span-7 relative">
-            <div className="relative aspect-[16/11] rounded-sm overflow-hidden bg-[#16181c] border border-[#262932] shadow-2xl group">
-              {/* Image: Entire baserri kitchen & grandmother in high-contrast B&W, real talo food in color on board */}
+          {/* Visual Column: Dual Photographic Dialogue (Memory + Authentic Mural) (7 cols) */}
+          <div className="lg:col-span-7 relative flex flex-col gap-6">
+            {/* Primary Visual: Grandmother kneading dough (Memory) */}
+            <div className="relative aspect-[16/10] rounded-sm overflow-hidden bg-[#16181c] border border-[#262932] shadow-2xl group">
               <img
-                src="./assets/sustraiak-amona.jpg"
+                src="./assets/amasado-talo-color.webp"
                 alt="Amona arto-taloa eskuz oratzen baserrian, Zutarriren talo garaikideak koloretan zurezko taulan"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
               />
 
-              {/* Chiaroscuro vignette & subtle film grain */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e0f12]/80 via-transparent to-transparent pointer-events-none" />
 
-              {/* Image Attribution / Technique Tag */}
+              {/* Attribution Tag */}
               <div className="absolute top-4 left-4 bg-[#0c0d0e]/90 backdrop-blur-sm border border-[#2b2d35] px-3 py-1 rounded-[2px] flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#d49b42]" />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-[#e5e7eb]">
-                  Kolore Hautatua · Argazki Dokumentala
+                  Memoria Bizia · Eskuen Tradizioa
                 </span>
               </div>
 
-              {/* Caption Overlay */}
+              {/* Caption */}
               <div className="absolute bottom-4 left-4 right-4 bg-[#0c0d0e]/95 backdrop-blur-md border border-[#2b2d35] p-3 sm:p-4 rounded-sm flex items-start justify-between gap-4">
                 <div className="flex items-start gap-2.5">
                   <Info className="w-4 h-4 text-[#d49b42] flex-shrink-0 mt-0.5" />
@@ -62,9 +61,33 @@ export const SustraiakSection: React.FC<SustraiakSectionProps> = ({ currentLang 
                     {t.caption}
                   </p>
                 </div>
-                <span className="font-mono text-[10px] text-[#6b7280] uppercase tracking-widest flex-shrink-0">
+                <span className="font-mono text-[10px] text-[#6b7280] uppercase tracking-widest flex-shrink-0 hidden sm:inline">
                   ZUTARRI ARCHIVE
                 </span>
+              </div>
+            </div>
+
+            {/* Secondary Visual: Physical Mural of Hands on Zutarri's Restaurant Wall */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center p-4 bg-[#131417] border border-[#252830] rounded-sm">
+              <div className="sm:col-span-4 relative aspect-[4/3] rounded-sm overflow-hidden bg-[#1a1c22] border border-[#2a2d36]">
+                <img
+                  src="./assets/mural-manos.jpg"
+                  alt="Zutarri jatetxeko horman eskuz margotutako murala: eskuak artoa oratzen"
+                  className="w-full h-full object-cover grayscale contrast-125"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d0e]/60 to-transparent pointer-events-none" />
+              </div>
+              <div className="sm:col-span-8 flex flex-col justify-center space-y-1 sm:pl-2">
+                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[#d49b42]">
+                  <Sparkles className="w-3 h-3 text-[#d49b42]" />
+                  <span>{t.muralTag}</span>
+                </div>
+                <h3 className="font-display font-bold text-base text-[#f3f4f6] uppercase tracking-wide">
+                  Bentako Plaza 3ko Horma Artistikoa
+                </h3>
+                <p className="font-mono text-xs text-[#9ca3af] leading-relaxed">
+                  {t.muralDesc}
+                </p>
               </div>
             </div>
           </div>

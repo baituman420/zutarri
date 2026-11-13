@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Language } from './types';
 import { useSoundEffect } from './hooks/useSoundEffect';
 import { Header } from './components/Header';
-import { TxalapartaHero } from './components/TxalapartaHero';
+import { HeroSection } from './components/HeroSection';
 import { SustraiakSection } from './components/SustraiakSection';
 import { IndarraSection } from './components/IndarraSection';
 import { SukaldaritzaSection } from './components/SukaldaritzaSection';
@@ -18,7 +18,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#0b0c0e] text-[#f3f4f6] selection:bg-[#33363e] selection:text-white flex flex-col font-sans">
-      {/* Navigation Header */}
+      {/* Navigation Header with Social Links */}
       <Header
         currentLang={currentLang}
         onLanguageChange={setCurrentLang}
@@ -29,8 +29,8 @@ export function App() {
 
       {/* Main Landing Flow */}
       <main className="flex-grow">
-        {/* Bloque 01: Txalaparta Interactiva Hero */}
-        <TxalapartaHero
+        {/* Bloque 01: Hero Garaikidea & Plater Nagusia */}
+        <HeroSection
           currentLang={currentLang}
           isSoundEnabled={isSoundEnabled}
           onToggleSound={toggleSound}
@@ -38,29 +38,32 @@ export function App() {
           onOpenMenuModal={() => setIsMenuModalOpen(true)}
         />
 
-        {/* Bloque 02: Sustraiak (Orígenes & Amona) */}
+        {/* Bloque 02: Sustraiak (Orígenes, Amona & Muraleko Eskuak) */}
         <SustraiakSection currentLang={currentLang} />
 
-        {/* Bloque 03: Indarra (Herri Kirolak & Aizkolari) */}
+        {/* Bloque 03: Indarra (Herri Kirolak & Aizkolari Zuri-Beltza) */}
         <IndarraSection currentLang={currentLang} />
 
-        {/* Bloque 04: Gure Sukaldaritza (Talo Contemporáneo & Carta) */}
+        {/* Bloque 04: Gure Sukaldaritza (Argazki Errealak, Erritmo Editoriala & Karta) */}
         <SukaldaritzaSection
           currentLang={currentLang}
           onOpenMenuModal={() => setIsMenuModalOpen(true)}
         />
 
-        {/* Bloque 05: Gure Etxea (Restaurante, Interior & Mural) */}
+        {/* Bloque 05: Gure Etxea (Bentako Plaza 3, Jantokia & Muralaren Triptikoa) */}
         <GureEtxeaSection currentLang={currentLang} />
 
-        {/* Bloque 06: Kontaktua (Canales Verificados & Reservas) */}
-        <KontaktuaSection currentLang={currentLang} />
+        {/* Bloque 06: Kontaktua & Txalaparta Itxiera (Txalaparta Hero Atzealdea, Erreserbak & Sareak) */}
+        <KontaktuaSection
+          currentLang={currentLang}
+          playWoodStrike={playWoodStrike}
+        />
       </main>
 
       {/* Footer */}
       <Footer currentLang={currentLang} />
 
-      {/* Verified Editorial Menu Modal */}
+      {/* Editorial Menu Modal */}
       <MenuModal
         isOpen={isMenuModalOpen}
         onClose={() => setIsMenuModalOpen(false)}

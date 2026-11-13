@@ -36,4 +36,6 @@ export interface MenuItem {
   };
   glutenFree: boolean;
   highlight?: boolean;
+  image?: string;
+  category?: 'talo' | 'pintxo' | 'postre';
 }
