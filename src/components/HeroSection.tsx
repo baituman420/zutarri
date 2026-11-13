@@ -12,8 +12,10 @@ interface HeroSectionProps {
   currentLang: Language;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
+  attachHeroVideo?: (video: HTMLVideoElement | null) => void;
+  setHeroActive?: (active: boolean) => void;
+  playHeroAudioSync?: () => void;
   playWoodStrike: (frequency: number) => void;
-  playTxalapartaRhythm?: () => void;
   triggerScrollAccent?: (frequency: number) => void;
   onOpenMenuModal: () => void;
 }
@@ -22,8 +24,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   currentLang,
   isSoundEnabled,
   onToggleSound,
-  playWoodStrike,
-  playTxalapartaRhythm,
+  attachHeroVideo,
+  setHeroActive,
+  playHeroAudioSync,
+  playWoodStrike: _playWoodStrike,
   triggerScrollAccent,
   onOpenMenuModal,
 }) => {
@@ -31,6 +35,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [pulseActive, setPulseActive] = useState(false);
+
+  // Attach hero video to the global audio manager for synchronized playback
+  useEffect(() => {
+    if (attachHeroVideo && videoRef.current) {
+      attachHeroVideo(videoRef.current);
+    }
+    return () => {
+      if (attachHeroVideo) {
+        attachHeroVideo(null);
+      }
+    };
+  }, [attachHeroVideo]);
 
   // Handle prefers-reduced-motion
   useEffect(() => {
@@ -114,7 +130,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         end: 'bottom 20%',
         scrub: 1,
         onLeave: () => {
+          setHeroActive?.(false);
           triggerScrollAccent?.(220);
+        },
+        onEnterBack: () => {
+          setHeroActive?.(true);
         },
       },
       yPercent: -10,
@@ -126,13 +146,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const handleRhythmPlay = () => {
     if (!isSoundEnabled) {
       onToggleSound();
+    } else if (playHeroAudioSync) {
+      playHeroAudioSync();
     }
     setPulseActive(true);
-    if (playTxalapartaRhythm) {
-      playTxalapartaRhythm();
-    } else {
-      playWoodStrike(240);
-    }
     setTimeout(() => setPulseActive(false), 1200);
   };
 

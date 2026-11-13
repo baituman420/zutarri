@@ -14,7 +14,15 @@ import { MenuModal } from './components/MenuModal';
 export function App() {
   const [currentLang, setCurrentLang] = useState<Language>('eu');
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
-  const { isSoundEnabled, toggleSound, playWoodStrike, playTxalapartaRhythm, triggerScrollAccent } = useSoundEffect();
+  const {
+    isSoundEnabled,
+    toggleSound,
+    attachHeroVideo,
+    setHeroActive,
+    playHeroAudioSync,
+    playWoodStrike,
+    triggerScrollAccent,
+  } = useSoundEffect();
 
   return (
     <div className="min-h-screen bg-[#0b0c0e] text-[#f3f4f6] selection:bg-[#33363e] selection:text-white flex flex-col font-sans">
@@ -34,8 +42,10 @@ export function App() {
           currentLang={currentLang}
           isSoundEnabled={isSoundEnabled}
           onToggleSound={toggleSound}
+          attachHeroVideo={attachHeroVideo}
+          setHeroActive={setHeroActive}
+          playHeroAudioSync={playHeroAudioSync}
           playWoodStrike={playWoodStrike}
-          playTxalapartaRhythm={playTxalapartaRhythm}
           triggerScrollAccent={triggerScrollAccent}
           onOpenMenuModal={() => setIsMenuModalOpen(true)}
         />
