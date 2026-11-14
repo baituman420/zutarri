@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <style>
+    .brand-title { font-family: 'Space Grotesk', -apple-system, sans-serif; font-weight: 700; font-size: 26px; fill: #F3F4F6; letter-spacing: 0.28em; }
+    .brand-sub { font-family: 'Space Grotesk', -apple-system, sans-serif; font-weight: 500; font-size: 9.5px; fill: #9CA3AF; letter-spacing: 0.42em; }
+    .plank { fill: #E5E7EB; }
+    .mark { fill: #6B7280; }
+  </style>
+  <!-- Minimalist Txalaparta plank mark -->
+  <g transform="translate(10, 24)">
+    <rect class="plank" x="0" y="0" width="36" height="4" rx="1.5"/>
+    <rect class="plank" x="2" y="8" width="32" height="4" rx="1.5"/>
+    <circle class="mark" cx="12" cy="18" r="2.2"/>
+    <circle class="mark" cx="24" cy="18" r="2.2"/>
+  </g>
+  <!-- Typography -->
+  <text x="62" y="38" class="brand-title">ZUTARRI</text>
+  <text x="64" y="54" class="brand-sub">JATETXEA · BASAURI</text>
+</svg>
