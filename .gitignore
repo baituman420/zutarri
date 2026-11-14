@@ -1,7 +1,22 @@
-node_modules
-dist
-dist-ssr
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+dist-ssr/
+
+# Local & environment variables
 *.local
-.DS_Store
+.env
+.env.*
+.env.local
+
+# Logs and system files
 *.log
+.DS_Store
+Thumbs.db
 tsconfig.tsbuildinfo
+
+# Scratch & development scripts
+scratch/
+public/assets/images/*.zip

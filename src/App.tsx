@@ -10,10 +10,17 @@ import { GureEtxeaSection } from './components/GureEtxeaSection';
 import { KontaktuaSection } from './components/KontaktuaSection';
 import { Footer } from './components/Footer';
 import { MenuModal } from './components/MenuModal';
+import { SukaldaritzaPreview } from './components/SukaldaritzaPreview';
 
 export function App() {
   const [currentLang, setCurrentLang] = useState<Language>('eu');
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
+
+  // Dedicated visual review route for Sukaldaritza gastronomic distribution
+  if (typeof window !== 'undefined' && window.location.pathname.includes('preview-sukaldaritza')) {
+    return <SukaldaritzaPreview />;
+  }
+
   const {
     isSoundEnabled,
     toggleSound,

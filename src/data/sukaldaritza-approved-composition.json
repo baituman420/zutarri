@@ -1,0 +1,113 @@
+{
+  "id": "custom-1794661426348",
+  "name": "barra 10 platos",
+  "status": "APPROVED_DEFINITIVE",
+  "timestamp": "14:03",
+  "blockHeight": 1040,
+  "referenceCanvas": {
+    "width": 1671,
+    "height": 941,
+    "aspectRatio": 1.77577045696068
+  },
+  "dishes": [
+    {
+      "id": "talo-amasadora",
+      "active": true,
+      "x": 476,
+      "y": 712,
+      "width": 163,
+      "height": 140,
+      "zIndex": 10
+    },
+    {
+      "id": "talos-barra",
+      "active": true,
+      "x": 1517,
+      "y": 593,
+      "width": 345,
+      "height": 132,
+      "zIndex": 15
+    },
+    {
+      "id": "croquetas-barra",
+      "active": true,
+      "x": 584,
+      "y": 580,
+      "width": 300,
+      "height": 123,
+      "zIndex": 20
+    },
+    {
+      "id": "kruntxitalo",
+      "active": true,
+      "x": 376,
+      "y": 583,
+      "width": 133,
+      "height": 107,
+      "zIndex": 12
+    },
+    {
+      "id": "gilda-donostiarra",
+      "active": true,
+      "x": 1479,
+      "y": 665,
+      "width": 145,
+      "height": 191,
+      "zIndex": 22
+    },
+    {
+      "id": "pintxo-klasikoa",
+      "active": false,
+      "x": 760,
+      "y": 759,
+      "width": 130,
+      "height": 165,
+      "zIndex": 18
+    },
+    {
+      "id": "copa-gastronomika",
+      "active": true,
+      "x": 1277,
+      "y": 643,
+      "width": 156,
+      "height": 247,
+      "zIndex": 14
+    },
+    {
+      "id": "cazuelita-beroa",
+      "active": true,
+      "x": 904,
+      "y": 589,
+      "width": 100,
+      "height": 119,
+      "zIndex": 16
+    },
+    {
+      "id": "broxeta-egurra",
+      "active": true,
+      "x": 1013,
+      "y": 666,
+      "width": 147,
+      "height": 277,
+      "zIndex": 17
+    },
+    {
+      "id": "tosta-antxoa",
+      "active": true,
+      "x": 797,
+      "y": 612,
+      "width": 109,
+      "height": 194,
+      "zIndex": 19
+    },
+    {
+      "id": "talo-idiazabal",
+      "active": true,
+      "x": 1152,
+      "y": 658,
+      "width": 147,
+      "height": 249,
+      "zIndex": 9
+    }
+  ]
+}
