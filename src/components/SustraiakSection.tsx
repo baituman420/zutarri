@@ -45,11 +45,12 @@ export const SustraiakSection: React.FC<SustraiakSectionProps> = ({ currentLang 
         <img
           src="./assets/sustraiak-cocina.webp"
           alt="Baserriko sukalde tradizionala zuri-beltzean, amona taloa oratzen eta Zutarriren Kruntxitalo plater erreala koloretan zurezko mahaian"
-          className="sustraiak-scene-img w-full h-[112%] -top-[6%] absolute object-cover object-center brightness-[0.72] contrast-115 scale-100 transition-transform duration-700 ease-out"
+          className="sustraiak-scene-img w-full h-[112%] -top-[6%] absolute object-cover object-[62%_center] md:object-center brightness-[0.78] contrast-115 scale-100 transition-transform duration-700 ease-out"
         />
 
-        {/* Chiaroscuro Environmental Vignettes: Continuous dissolve from Hero & high legibility on text side */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/50 to-transparent pointer-events-none" />
+        {/* Chiaroscuro Environmental Vignettes: Horizontal on desktop, calibrated vertical on mobile */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/50 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-gradient-to-t from-[#07080a]/90 via-[#07080a]/35 to-[#07080a]/75 pointer-events-none" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#07080a] to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07080a] to-transparent pointer-events-none" />
       </div>

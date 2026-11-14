@@ -166,14 +166,13 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
         <img
           src="./assets/indarra-aizkolari.webp"
           alt="Aizkolaria aizkorarekin enborra mozten indar betean Bizkaiko plazan"
-          className="indarra-aizkolari-img w-full h-full object-cover object-center grayscale contrast-125 brightness-[0.55] scale-100 transition-transform duration-700 ease-out"
+          className="indarra-aizkolari-img w-full h-full object-cover object-center grayscale contrast-125 brightness-[0.60] scale-100 transition-transform duration-700 ease-out"
         />
-        {/* Soft chiaroscuro environmental vignettes to integrate typography without boxes */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/55 to-transparent pointer-events-none" />
+        {/* Chiaroscuro environmental vignettes: desktop horizontal, mobile calibrated vertical */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/55 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-gradient-to-t from-[#07080a]/90 via-[#07080a]/35 to-[#07080a]/75 pointer-events-none" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#07080a] to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07080a] to-transparent pointer-events-none" />
-        {/* Mobile ambient contrast scrim */}
-        <div className="absolute inset-0 bg-[#07080a]/50 sm:hidden pointer-events-none" />
       </div>
 
       {/* LAYER 2: Real Gastronomy of Zutarri (Natural Vibrant Color, Wood & Fire) */}
@@ -181,10 +180,11 @@ export const IndarraSection: React.FC<IndarraSectionProps> = ({ currentLang }) =
         <img
           src="./assets/indarra-gastronomia.webp"
           alt="Zutarriren Kruntxitalo kurruskaria zurezko oholean Gernikako piparrekin eta betelan mamitsuarekin"
-          className="indarra-gastro-img w-full h-full object-cover object-center brightness-[0.88] contrast-110 scale-100 transition-transform duration-700 ease-out"
+          className="indarra-gastro-img w-full h-full object-cover object-[78%_center] md:object-center brightness-[0.92] contrast-110 scale-100 transition-transform duration-700 ease-out"
         />
-        {/* Chiaroscuro Environmental Vignettes for high contrast and readability on the text side */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/40 to-transparent pointer-events-none" />
+        {/* Calibrated chiaroscuro: desktop horizontal, mobile vertical keeping gastronomy luminous */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-[#07080a]/95 via-[#07080a]/40 to-transparent pointer-events-none" />
+        <div className="md:hidden absolute inset-0 bg-gradient-to-t from-[#07080a]/90 via-[#07080a]/30 to-[#07080a]/70 pointer-events-none" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#07080a] to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07080a] to-transparent pointer-events-none" />
       </div>
