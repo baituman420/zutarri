@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { BookOpen, Sparkles, X, ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, Sparkles, X, ArrowUpRight, CheckCircle2, MoveHorizontal } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
 import {
@@ -48,8 +48,10 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
         ? 740
         : overrideHeight || APPROVED_COMPOSITION_METADATA.blockHeight,
   }));
+  const kitchenCameraRef = useRef<HTMLDivElement>(null);
+  const cameraXRef = useRef<number>(0);
+  const [hasDragged, setHasDragged] = useState<boolean>(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [mobileStationIndex, setMobileStationIndex] = useState<number>(0);
   const [selectedMobileItem, setSelectedMobileItem] = useState<GastronomicItem | null>(null);
 
   const defaultDishes: GastronomicItem[] = useMemo(() => APPROVED_10_DISHES, []);
@@ -99,14 +101,14 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
 
     let renderW: number;
     let renderH: number;
-    let renderX: number;
+    let defaultCameraX: number;
     let renderY: number;
 
     if (cAspect >= NATIVE_ASPECT) {
       // Container is wider than the native image (cropped top/bottom)
       renderW = cw;
       renderH = cw / NATIVE_ASPECT;
-      renderX = 0;
+      defaultCameraX = 0;
       // Anchor to bottom so the wooden counter is always resting perfectly on the bottom
       renderY = ch - renderH;
     } else {
@@ -116,33 +118,29 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
       renderY = 0;
 
       if (isMobile) {
-        // On mobile: camera pans smoothly to the chosen workstation
-        const targetDish = dishes[mobileStationIndex];
-        const targetNormX = targetDish ? targetDish.nativeCoords.x / NATIVE_WIDTH : 0.52;
-        // Center the target workstation in the mobile viewport
-        const targetPx = targetNormX * renderW;
-        renderX = cw / 2 - targetPx;
-
-        // Clamp so background doesn't expose void beyond left/right edges
+        // On mobile: initially center the historical kitchen counter (~50% width)
         const minX = cw - renderW;
         const maxX = 0;
-        renderX = Math.max(minX, Math.min(maxX, renderX));
+        defaultCameraX = Math.max(minX, Math.min(maxX, cw / 2 - 0.50 * renderW));
       } else {
         // Desktop / Tablet:
         // Bias slightly towards the left (0.28) so the woman at the hearth and kneading table are fully visible
         const overflowX = renderW - cw;
-        renderX = -overflowX * 0.28;
+        defaultCameraX = -overflowX * 0.28;
       }
     }
 
-    // Compute exact position and size for each dish
+    const minX = Math.min(0, cw - renderW);
+    const maxX = 0;
+
+    // Compute exact position and size for each dish relative to the kitchen camera canvas
     const dishPositions = dishes.map((dish) => {
       const normX = dish.nativeCoords.x / NATIVE_WIDTH;
       const normY = dish.nativeCoords.y / NATIVE_HEIGHT;
       const normW = dish.nativeCoords.width / NATIVE_WIDTH;
 
-      const left = renderX + normX * renderW;
-      const top = renderY + normY * renderH;
+      const left = normX * renderW;
+      const top = normY * renderH;
       const width = normW * renderW;
 
       return {
@@ -157,12 +155,154 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
     return {
       renderW,
       renderH,
-      renderX,
+      defaultCameraX,
       renderY,
+      minX,
+      maxX,
       dishPositions,
       isMobile,
     };
-  }, [containerSize, mobileStationIndex, dishes]);
+  }, [containerSize, dishes]);
+
+  // Sync camera position on geometry changes or container resize
+  useEffect(() => {
+    if (!hasDragged || !geometry.isMobile) {
+      cameraXRef.current = geometry.defaultCameraX;
+      if (kitchenCameraRef.current) {
+        kitchenCameraRef.current.style.transform = `translate3d(${geometry.defaultCameraX}px, 0, 0)`;
+      }
+    } else {
+      // Clamping within bounds if container resized
+      const clampedX = Math.max(geometry.minX, Math.min(geometry.maxX, cameraXRef.current));
+      cameraXRef.current = clampedX;
+      if (kitchenCameraRef.current) {
+        kitchenCameraRef.current.style.transform = `translate3d(${clampedX}px, 0, 0)`;
+      }
+    }
+  }, [geometry.defaultCameraX, geometry.minX, geometry.maxX, geometry.isMobile, hasDragged]);
+
+  // Mobile Touch Drag & Exploration Handlers (Continuous, proportional, zero inertia)
+  useEffect(() => {
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    let startX = 0;
+    let startY = 0;
+    let initialX = 0;
+    let isTracking = false;
+    let isHorizontalDrag = false;
+    let isVerticalScroll = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (window.innerWidth >= 768 || e.touches.length !== 1) return;
+      isTracking = true;
+      isHorizontalDrag = false;
+      isVerticalScroll = false;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      initialX = cameraXRef.current;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isTracking || window.innerWidth >= 768 || e.touches.length !== 1) return;
+
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      // Determine intent on small initial movement (3px threshold)
+      if (!isHorizontalDrag && !isVerticalScroll) {
+        if (absX < 3 && absY < 3) return;
+        if (absY >= absX) {
+          isVerticalScroll = true; // Natural page scroll takes precedence
+          return;
+        } else {
+          isHorizontalDrag = true; // User wants horizontal kitchen exploration
+        }
+      }
+
+      if (isVerticalScroll) return;
+
+      if (isHorizontalDrag) {
+        if (e.cancelable) e.preventDefault();
+
+        const cw = sectionEl.clientWidth || window.innerWidth;
+        const renderW = geometry.renderW;
+        const minX = Math.min(0, cw - renderW);
+        const maxX = 0;
+
+        // Direct, continuous, 1:1 proportional movement
+        const targetX = Math.max(minX, Math.min(maxX, initialX + deltaX));
+        cameraXRef.current = targetX;
+
+        if (kitchenCameraRef.current) {
+          kitchenCameraRef.current.style.transform = `translate3d(${targetX}px, 0, 0)`;
+        }
+
+        setHasDragged(true);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isTracking = false;
+      isHorizontalDrag = false;
+      isVerticalScroll = false;
+    };
+
+    // Pointer / Mouse Fallback (for DevTools emulation & desktop testing)
+    let isMouseDown = false;
+    const handleMouseDown = (e: MouseEvent) => {
+      if (window.innerWidth >= 768 || e.button !== 0) return;
+      isMouseDown = true;
+      startX = e.clientX;
+      initialX = cameraXRef.current;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isMouseDown || window.innerWidth >= 768) return;
+      const deltaX = e.clientX - startX;
+      const cw = sectionEl.clientWidth || window.innerWidth;
+      const renderW = geometry.renderW;
+      const minX = Math.min(0, cw - renderW);
+      const maxX = 0;
+
+      const targetX = Math.max(minX, Math.min(maxX, initialX + deltaX));
+      cameraXRef.current = targetX;
+
+      if (kitchenCameraRef.current) {
+        kitchenCameraRef.current.style.transform = `translate3d(${targetX}px, 0, 0)`;
+      }
+
+      setHasDragged(true);
+    };
+
+    const handleMouseUp = () => {
+      isMouseDown = false;
+    };
+
+    sectionEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+    sectionEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+    sectionEl.addEventListener('touchend', handleTouchEnd, { passive: true });
+    sectionEl.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+
+    sectionEl.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      sectionEl.removeEventListener('touchstart', handleTouchStart);
+      sectionEl.removeEventListener('touchmove', handleTouchMove);
+      sectionEl.removeEventListener('touchend', handleTouchEnd);
+      sectionEl.removeEventListener('touchcancel', handleTouchEnd);
+
+      sectionEl.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [geometry.renderW]);
 
   const activeDish = dishes.find(d => d.id === hoveredId);
 
@@ -171,31 +311,128 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
       id="sukaldaritza"
       ref={sectionRef}
       style={overrideHeight ? { height: `${overrideHeight}px`, minHeight: `${overrideHeight}px` } : undefined}
-      className={`relative w-full ${overrideHeight ? '' : 'min-h-[740px] sm:min-h-[840px] md:min-h-[940px] lg:h-[1040px] xl:h-[1100px]'} flex flex-col justify-between overflow-hidden bg-[#08090c] text-[#f3f4f6] select-none`}
+      className={`relative w-full ${overrideHeight ? '' : 'min-h-[740px] sm:min-h-[840px] md:min-h-[940px] lg:h-[1040px] xl:h-[1100px]'} flex flex-col justify-between overflow-hidden bg-[#08090c] text-[#f3f4f6] touch-pan-y select-none`}
     >
       {/* ========================================================================= */}
-      {/* 1. HISTORICAL KITCHEN BACKGROUND (Fills 100% of the entire section block) */}
+      {/* 1. PANORAMIC KITCHEN CAMERA LAYER: Photo + 10 Dishes Synchronized         */}
       {/* ========================================================================= */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div
+        ref={kitchenCameraRef}
+        className="absolute will-change-transform touch-pan-y select-none"
+        style={{
+          width: `${geometry.renderW}px`,
+          height: `${geometry.renderH}px`,
+          top: `${geometry.renderY}px`,
+          left: 0,
+          transform: `translate3d(${geometry.defaultCameraX}px, 0, 0)`,
+        }}
+      >
+        {/* Kitchen background image */}
         <img
           src="./assets/images/Cocina histórica con barra de madera vacía.png"
           alt="Zutarri Sukalde Historikoa eta Barra"
           style={{
             width: `${geometry.renderW}px`,
             height: `${geometry.renderH}px`,
-            transform: `translate3d(${geometry.renderX}px, ${geometry.renderY}px, 0)`,
-            transition: geometry.isMobile ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
-          }}
-          className="absolute top-0 left-0 max-w-none select-none"
+            userSelect: 'none',
+            WebkitUserDrag: 'none',
+          } as React.CSSProperties}
+          className="absolute top-0 left-0 max-w-none select-none pointer-events-none"
+          draggable={false}
           loading="eager"
         />
 
-        {/* Top Scrim & Vignette: Seamless continuous transition from Section 03 (Indarra) */}
-        <div className="absolute top-0 inset-x-0 h-32 sm:h-44 bg-gradient-to-b from-[#0b0c0e] via-[#0b0c0e]/60 to-transparent pointer-events-none z-10" />
+        {/* 10 Independent Gastronomic Product Components (Anchored relative to kitchen canvas) */}
+        {dishes.map((dish, idx) => {
+          const pos = geometry.dishPositions[idx];
+          if (!pos) return null;
 
-        {/* Bottom Scrim & Vignette: Seamless continuous transition to Section 05 (Gure Etxea) */}
-        <div className="absolute bottom-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-t from-[#07080a] via-[#07080a]/60 to-transparent pointer-events-none z-10" />
+          const isHovered = hoveredId === dish.id;
+          const isSelected = selectedMobileItem?.id === dish.id;
+          const isActive = isHovered || isSelected;
+
+          return (
+            <div
+              key={dish.id}
+              style={{
+                left: `${pos.left}px`,
+                top: `${pos.top}px`,
+                width: `${pos.width}px`,
+                zIndex: pos.zIndex,
+                transform: 'translate(-50%, -50%)',
+              }}
+              className="absolute pointer-events-auto cursor-pointer group"
+              onMouseEnter={() => setHoveredId(dish.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              onClick={() => setSelectedMobileItem(dish)}
+              tabIndex={0}
+              role="button"
+              aria-label={dish.name[currentLang]}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setSelectedMobileItem(dish);
+                }
+              }}
+            >
+              {/* Photorealistic Ground Contact Shadow Asset or Organic Shadow */}
+              {dish.shadowSrc ? (
+                <img
+                  src={dish.shadowSrc}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  style={{ userSelect: 'none', WebkitUserDrag: 'none' } as React.CSSProperties}
+                  className={`absolute inset-0 w-full h-full pointer-events-none select-none transition-all duration-300 ease-out ${
+                    isActive
+                      ? 'opacity-50 scale-[0.97] blur-[1.5px]'
+                      : 'opacity-100 scale-100 blur-0'
+                  }`}
+                />
+              ) : (
+                <div
+                  className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-[88%] h-3 rounded-full bg-black/75 blur-[4px] pointer-events-none transition-all duration-300 ${
+                    isActive ? 'opacity-40 scale-90 blur-[5px]' : 'opacity-85 scale-100'
+                  }`}
+                />
+              )}
+
+              {/* Actual Dish Cutout (Warm Desaturated Idle -> Vibrant Full Color Bloom on Active/Hover) */}
+              <div
+                className={`relative w-full h-auto transition-transform duration-500 ease-out ${
+                  isActive ? '-translate-y-2 scale-[1.03]' : 'translate-y-0 scale-100'
+                }`}
+              >
+                <img
+                  src={dish.imageSrc}
+                  alt={dish.name[currentLang]}
+                  draggable={false}
+                  className="w-full h-auto block select-none pointer-events-none"
+                  style={{
+                    filter: isActive
+                      ? 'drop-shadow(0 14px 28px rgba(0,0,0,0.85)) drop-shadow(0 0 16px rgba(212,155,66,0.30)) saturate(1) sepia(0) brightness(1) contrast(1)'
+                      : 'drop-shadow(0 3px 6px rgba(0,0,0,0.65)) saturate(0.40) sepia(0.30) brightness(0.92) contrast(1.04)',
+                    transition:
+                      'filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                    userSelect: 'none',
+                    WebkitUserDrag: 'none',
+                  } as React.CSSProperties}
+                />
+
+                {/* Subtle Beacon Pulse on Idle */}
+                {!isActive && (
+                  <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#d49b42]/35 animate-ping pointer-events-none" />
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Top Scrim & Vignette: Seamless continuous transition from Section 03 (Indarra) */}
+      <div className="absolute top-0 inset-x-0 h-32 sm:h-44 bg-gradient-to-b from-[#0b0c0e] via-[#0b0c0e]/60 to-transparent pointer-events-none z-10" />
+
+      {/* Bottom Scrim & Vignette: Seamless continuous transition to Section 05 (Gure Etxea) */}
+      <div className="absolute bottom-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-t from-[#07080a] via-[#07080a]/60 to-transparent pointer-events-none z-10" />
 
       {/* ========================================================================= */}
       {/* 2. SECTION HEADER (Editorial Typography Floating Over the Scene)           */}
@@ -222,182 +459,71 @@ export const SukaldaritzaSection: React.FC<SukaldaritzaSectionProps> = ({
                 {currentLang === 'eu' ? 'Pasa kurtsorea plateren gainetik' : 'Pasa el cursor sobre los platos'}
               </span>
               <span className="md:hidden">
-                {currentLang === 'eu' ? 'Arakatu sukaldeko 10 guneak' : 'Explora los 10 puntos de la cocina'}
+                {currentLang === 'eu' ? 'Arrastatu sukaldea eta ukitu platerak' : 'Arrastra la cocina y toca los platos'}
               </span>
             </div>
           </div>
         </div>
-
-        {/* Mobile Workstation Navigator (Only on Mobile screens) */}
-        {geometry.isMobile && (
-          <div className="mt-4 flex items-center justify-between bg-[#08090c]/90 backdrop-blur-md p-1.5 rounded-lg border border-[#2a2f3a]/80 shadow-xl max-w-sm">
-            <button
-              onClick={() => setMobileStationIndex(prev => Math.max(0, prev - 1))}
-              disabled={mobileStationIndex === 0}
-              className="p-1 text-[#9ca3af] disabled:opacity-30 hover:text-white transition-opacity"
-              aria-label="Anterior puesto"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-1.5 overflow-x-auto max-w-[210px] py-0.5 no-scrollbar">
-              {dishes.map((d, idx) => (
-                <button
-                  key={d.id}
-                  onClick={() => setMobileStationIndex(idx)}
-                  className={`px-2 py-1 rounded text-[10px] font-mono whitespace-nowrap uppercase tracking-wider transition-all flex-shrink-0 ${
-                    mobileStationIndex === idx
-                      ? 'bg-[#d49b42] text-[#07080a] font-bold shadow-md'
-                      : 'text-[#9ca3af] hover:text-white bg-[#14171f]'
-                  }`}
-                >
-                  {d.index}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setMobileStationIndex(prev => Math.min(dishes.length - 1, prev + 1))}
-              disabled={mobileStationIndex === dishes.length - 1}
-              className="p-1 text-[#9ca3af] disabled:opacity-30 hover:text-white transition-opacity"
-              aria-label="Siguiente puesto"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. INDEPENDENT GASTRONOMIC PRODUCT COMPONENTS (Mathematically Anchored)   */}
+      {/* 3. DESKTOP EDITORIAL SPOTLIGHT (Floating Naturally Over the Scene)         */}
       {/* ========================================================================= */}
-      <div className="absolute inset-0 pointer-events-none z-20">
-        {dishes.map((dish, idx) => {
-          const pos = geometry.dishPositions[idx];
-          if (!pos) return null;
+      {activeDish && !geometry.isMobile && (
+        <div
+          className={`hidden md:block absolute z-30 pointer-events-none transition-all duration-300 ease-out ${
+            activeDish.tooltipPosition === 'top-left'
+              ? 'left-[8%] top-[34%] max-w-sm text-left'
+              : activeDish.tooltipPosition === 'top-right'
+              ? 'right-[8%] top-[36%] max-w-sm text-left'
+              : 'left-1/2 -translate-x-1/2 top-[32%] max-w-md text-center'
+          }`}
+        >
+          <div className="bg-[#08090c]/90 backdrop-blur-md p-5 rounded-md border border-[#d49b42]/40 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#d49b42]">
+              <span>{activeDish.index} // {activeDish.badge[currentLang]}</span>
+            </div>
 
-          const isHovered = hoveredId === dish.id;
-          const isMobileActive = geometry.isMobile && mobileStationIndex === idx;
+            <h3 className="font-display font-black text-xl text-[#f3f4f6] uppercase tracking-tight leading-snug">
+              {activeDish.name[currentLang]}
+            </h3>
 
-          return (
-            <div
-              key={dish.id}
-              style={{
-                left: `${pos.left}px`,
-                top: `${pos.top}px`,
-                width: `${pos.width}px`,
-                zIndex: pos.zIndex,
-                transform: 'translate(-50%, -50%)',
-                transition: geometry.isMobile ? 'left 0.6s cubic-bezier(0.16, 1, 0.3, 1), top 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
-              }}
-              className="absolute pointer-events-auto cursor-pointer group"
-              onMouseEnter={() => setHoveredId(dish.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onClick={() => setSelectedMobileItem(dish)}
-              tabIndex={0}
-              role="button"
-              aria-label={dish.name[currentLang]}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setSelectedMobileItem(dish);
-                }
-              }}
-            >
-              {/* Photorealistic Ground Contact Shadow Asset or Organic Shadow */}
-              {dish.shadowSrc ? (
-                <img
-                  src={dish.shadowSrc}
-                  alt=""
-                  aria-hidden="true"
-                  className={`absolute inset-0 w-full h-full pointer-events-none select-none transition-all duration-300 ease-out ${
-                    isHovered || isMobileActive
-                      ? 'opacity-50 scale-[0.97] blur-[1.5px]'
-                      : 'opacity-100 scale-100 blur-0'
-                  }`}
-                />
-              ) : (
-                <div
-                  className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-[88%] h-3 rounded-full bg-black/75 blur-[4px] pointer-events-none transition-all duration-300 ${
-                    isHovered || isMobileActive ? 'opacity-40 scale-90 blur-[5px]' : 'opacity-85 scale-100'
-                  }`}
-                />
-              )}
+            <p className="font-sans text-xs text-[#d1d5db] leading-relaxed">
+              {activeDish.description[currentLang]}
+            </p>
 
-              {/* Actual Dish Cutout (Warm Desaturated Idle -> Vibrant Full Color Bloom on Hover) */}
-              <div
-                className={`relative w-full h-auto transition-transform duration-500 ease-out ${
-                  isHovered || isMobileActive ? '-translate-y-2 scale-[1.03]' : 'translate-y-0 scale-100'
-                }`}
+            <p className="font-editorial italic text-xs text-[#9ca3af] pt-1">
+              {activeDish.notes[currentLang]}
+            </p>
+
+            <div className="pt-2 flex items-center justify-between border-t border-[#22262e] text-[11px] font-mono">
+              <span className="text-[#6b7280]">
+                {activeDish.zone[currentLang]}
+              </span>
+              <button
+                onClick={onOpenMenuModal}
+                className="inline-flex items-center gap-1 text-[#d49b42] hover:text-white transition-colors pointer-events-auto uppercase tracking-wider font-semibold cursor-pointer"
               >
-                <img
-                  src={dish.imageSrc}
-                  alt={dish.name[currentLang]}
-                  className="w-full h-auto block select-none pointer-events-none"
-                  style={{
-                    filter:
-                      isHovered || isMobileActive
-                        ? 'drop-shadow(0 14px 28px rgba(0,0,0,0.85)) drop-shadow(0 0 16px rgba(212,155,66,0.30)) saturate(1) sepia(0) brightness(1) contrast(1)'
-                        : 'drop-shadow(0 3px 6px rgba(0,0,0,0.65)) saturate(0.40) sepia(0.30) brightness(0.92) contrast(1.04)',
-                    transition:
-                      'filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                />
-
-                {/* Subtle Beacon Pulse on Idle */}
-                {!isHovered && !isMobileActive && (
-                  <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#d49b42]/35 animate-ping pointer-events-none" />
-                )}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* ========================================================================= */}
-        {/* DESKTOP EDITORIAL SPOTLIGHT (Floating Naturally Over the Scene)           */}
-        {/* ========================================================================= */}
-        {activeDish && !geometry.isMobile && (
-          <div
-            className={`hidden md:block absolute z-30 pointer-events-none transition-all duration-300 ease-out ${
-              activeDish.tooltipPosition === 'top-left'
-                ? 'left-[8%] top-[34%] max-w-sm text-left'
-                : activeDish.tooltipPosition === 'top-right'
-                ? 'right-[8%] top-[36%] max-w-sm text-left'
-                : 'left-1/2 -translate-x-1/2 top-[32%] max-w-md text-center'
-            }`}
-          >
-            <div className="bg-[#08090c]/90 backdrop-blur-md p-5 rounded-md border border-[#d49b42]/40 shadow-[0_20px_50px_rgba(0,0,0,0.9)] space-y-2.5">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#d49b42]">
-                <span>{activeDish.index} // {activeDish.badge[currentLang]}</span>
-              </div>
-
-              <h3 className="font-display font-black text-xl text-[#f3f4f6] uppercase tracking-tight leading-snug">
-                {activeDish.name[currentLang]}
-              </h3>
-
-              <p className="font-sans text-xs text-[#d1d5db] leading-relaxed">
-                {activeDish.description[currentLang]}
-              </p>
-
-              <p className="font-editorial italic text-xs text-[#9ca3af] pt-1">
-                {activeDish.notes[currentLang]}
-              </p>
-
-              <div className="pt-2 flex items-center justify-between border-t border-[#22262e] text-[11px] font-mono">
-                <span className="text-[#6b7280]">
-                  {activeDish.zone[currentLang]}
-                </span>
-                <button
-                  onClick={onOpenMenuModal}
-                  className="inline-flex items-center gap-1 text-[#d49b42] hover:text-white transition-colors pointer-events-auto uppercase tracking-wider font-semibold cursor-pointer"
-                >
-                  <span>{t.viewFullMenu}</span>
-                  <ArrowUpRight className="w-3 h-3" />
-                </button>
-              </div>
+                <span>{t.viewFullMenu}</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Discreet Mobile Drag Indicator (Disappears permanently once the user drags the kitchen scene) */}
+      {!hasDragged && (
+        <div
+          data-testid="sukaldaritza-drag-indicator"
+          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none transition-opacity duration-500"
+        >
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08090c]/85 backdrop-blur-md border border-[#d49b42]/30 text-[10px] font-mono uppercase tracking-wider text-[#d49b42] shadow-xl">
+            <MoveHorizontal className="w-3.5 h-3.5 text-[#d49b42] animate-pulse" />
+            <span>{currentLang === 'eu' ? 'Arrastatu sukaldea' : 'Arrastra la cocina'}</span>
+          </div>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* 4. MOBILE BOTTOM-SHEET MODAL (Full Inspection on Tap)                     */}
