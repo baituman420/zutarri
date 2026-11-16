@@ -108,6 +108,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
 
   const [activeStep, setActiveStep] = useState<number>(0);
   const [hasDragged, setHasDragged] = useState<boolean>(false);
+  const cameraXRef = useRef<number>(0);
   const [containerSize, setContainerSize] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1440,
     height: 800,
@@ -139,39 +140,46 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
 
     let startX = 0;
     let startY = 0;
-    let initialCameraX = 0;
+    let initialX = 0;
     let isTracking = false;
-    let gestureIntent: 'undecided' | 'horizontal' | 'vertical' = 'undecided';
+    let isHorizontalDrag = false;
+    let isVerticalScroll = false;
 
-    const onStart = (clientX: number, clientY: number) => {
-      if (window.innerWidth >= 768) return;
+    // Mobile Touch Handlers (iOS Safari & Android Chrome)
+    const handleTouchStart = (e: TouchEvent) => {
+      if (window.innerWidth >= 768 || e.touches.length !== 1) return;
       isTracking = true;
-      startX = clientX;
-      startY = clientY;
-      gestureIntent = 'undecided';
-
-      if (diningCameraRef.current) {
-        initialCameraX = Number(gsap.getProperty(diningCameraRef.current, 'x')) || 0;
-      }
+      isHorizontalDrag = false;
+      isVerticalScroll = false;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      initialX = cameraXRef.current;
     };
 
-    const onMove = (clientX: number, clientY: number, e: Event) => {
-      if (!isTracking || window.innerWidth >= 768) return;
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isTracking || window.innerWidth >= 768 || e.touches.length !== 1) return;
 
-      const deltaX = clientX - startX;
-      const deltaY = clientY - startY;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
 
-      if (gestureIntent === 'undecided') {
-        const absX = Math.abs(deltaX);
-        const absY = Math.abs(deltaY);
-        if (absY > absX && absY > 6) {
-          gestureIntent = 'vertical';
-        } else if (absX > absY && absX > 6) {
-          gestureIntent = 'horizontal';
+      // Determine intent on small initial movement (3px threshold)
+      if (!isHorizontalDrag && !isVerticalScroll) {
+        if (absX < 3 && absY < 3) return;
+        if (absY >= absX) {
+          isVerticalScroll = true; // Natural page scroll takes precedence
+          return;
+        } else {
+          isHorizontalDrag = true; // User wants horizontal exploration
         }
       }
 
-      if (gestureIntent === 'horizontal') {
+      if (isVerticalScroll) return;
+
+      if (isHorizontalDrag) {
         if (e.cancelable) e.preventDefault();
 
         const cw = stageEl.clientWidth || window.innerWidth;
@@ -180,7 +188,8 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
         const maxOffset = Math.max(0, (renderW - cw) / 2);
 
         // Movement is direct, continuous and proportional to finger displacement
-        const targetX = Math.max(-maxOffset, Math.min(maxOffset, initialCameraX + deltaX));
+        const targetX = Math.max(-maxOffset, Math.min(maxOffset, initialX + deltaX));
+        cameraXRef.current = targetX;
 
         if (diningCameraRef.current) {
           gsap.set(diningCameraRef.current, { x: targetX });
@@ -190,53 +199,61 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
       }
     };
 
-    const onEnd = () => {
+    const handleTouchEnd = () => {
       isTracking = false;
-      gestureIntent = 'undecided';
+      isHorizontalDrag = false;
+      isVerticalScroll = false;
     };
 
-    // Touch Event Handlers
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        onStart(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        onMove(e.touches[0].clientX, e.touches[0].clientY, e);
-      }
-    };
-
-    // Mouse Fallback for Responsive DevTools Emulation
+    // Pointer / Mouse Fallback (for DevTools emulation and mouse devices)
+    let isMouseDown = false;
     const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 0) {
-        onStart(e.clientX, e.clientY);
-      }
+      if (window.innerWidth >= 768 || e.button !== 0) return;
+      isMouseDown = true;
+      startX = e.clientX;
+      initialX = cameraXRef.current;
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      onMove(e.clientX, e.clientY, e);
+      if (!isMouseDown || window.innerWidth >= 768) return;
+      const deltaX = e.clientX - startX;
+      const cw = stageEl.clientWidth || window.innerWidth;
+      const ch = stageEl.clientHeight || window.innerHeight;
+      const renderW = ch * NATIVE_ASPECT;
+      const maxOffset = Math.max(0, (renderW - cw) / 2);
+
+      const targetX = Math.max(-maxOffset, Math.min(maxOffset, initialX + deltaX));
+      cameraXRef.current = targetX;
+
+      if (diningCameraRef.current) {
+        gsap.set(diningCameraRef.current, { x: targetX });
+      }
+
+      setHasDragged(true);
+    };
+
+    const handleMouseUp = () => {
+      isMouseDown = false;
     };
 
     stageEl.addEventListener('touchstart', handleTouchStart, { passive: true });
     stageEl.addEventListener('touchmove', handleTouchMove, { passive: false });
-    stageEl.addEventListener('touchend', onEnd, { passive: true });
-    stageEl.addEventListener('touchcancel', onEnd, { passive: true });
+    stageEl.addEventListener('touchend', handleTouchEnd, { passive: true });
+    stageEl.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
     stageEl.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', onEnd);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       stageEl.removeEventListener('touchstart', handleTouchStart);
       stageEl.removeEventListener('touchmove', handleTouchMove);
-      stageEl.removeEventListener('touchend', onEnd);
-      stageEl.removeEventListener('touchcancel', onEnd);
+      stageEl.removeEventListener('touchend', handleTouchEnd);
+      stageEl.removeEventListener('touchcancel', handleTouchEnd);
 
       stageEl.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', onEnd);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
 
@@ -300,6 +317,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
       // DESKTOP (>= 768px): Pinned ScrollTrigger with seamless intro and physical detachment from wall
       mm.add('(min-width: 768px)', () => {
         // Initial state: flush with wall, high contrast B&W, invisible shadow
+        cameraXRef.current = 0;
         if (diningCameraRef.current) gsap.set(diningCameraRef.current, { x: 0, y: 0 });
         if (backdropDimRef.current) gsap.set(backdropDimRef.current, { opacity: 0 });
         if (hudRef.current) gsap.set(hudRef.current, { opacity: 0 });
@@ -672,6 +690,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
 
         // Sub-pixel pan distance to initially center dining room on mobile
         const pan0 = (renderW / 2) - ((262 + 77) / NATIVE_WIDTH * renderW);
+        cameraXRef.current = pan0;
 
         // Initial mobile states: start centered on the main dining room wall
         if (diningCameraRef.current) gsap.set(diningCameraRef.current, { x: pan0, y: 0 });
@@ -1018,12 +1037,12 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
       <div ref={stageTriggerRef} className="relative w-full overflow-hidden">
         <div
           ref={pinnedStageRef}
-          className="relative w-full h-screen h-[100dvh] min-h-[580px] max-h-[960px] overflow-hidden bg-[#07080a] touch-pan-y"
+          className="relative w-full h-screen h-[100dvh] min-h-[580px] max-h-[960px] overflow-hidden bg-[#07080a] touch-pan-y select-none"
         >
           {/* Panoramic Dining Camera Layer: Moves together background and wall artworks */}
           <div
             ref={diningCameraRef}
-            className="absolute will-change-transform"
+            className="absolute will-change-transform touch-pan-y select-none"
             style={{
               left: `${canvasLayout.renderX}px`,
               top: `${canvasLayout.renderY}px`,
@@ -1032,7 +1051,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
             }}
           >
             {/* Full-Bleed Restaurant Dining Room Background */}
-            <div className="absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-full h-full touch-pan-y">
               <img
                 src="./assets/restaurante-comedor-real.jpg"
                 alt="Zutarri Jatetxearen jantokia Bentako Plazan"
@@ -1069,7 +1088,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
                   <div
                     key={panel.id}
                     ref={(el) => (worksRef.current[index] = el)}
-                    className="absolute pointer-events-auto will-change-transform"
+                    className="absolute pointer-events-none md:pointer-events-auto will-change-transform touch-pan-y select-none"
                     style={{
                       left: `${pos.left}px`,
                       top: `${pos.top}px`,
@@ -1095,10 +1114,15 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
                         ref={(el) => (imgRefs.current[index] = el)}
                         src={panel.image}
                         alt={panel.title[currentLang]}
-                        className="w-full h-full object-cover rounded-none cursor-pointer"
-                        style={{
-                          transition: 'filter 0.4s ease-out',
-                        }}
+                        draggable={false}
+                        className="w-full h-full object-cover rounded-none md:cursor-pointer select-none pointer-events-none md:pointer-events-auto"
+                        style={
+                          {
+                            transition: 'filter 0.4s ease-out',
+                            WebkitUserDrag: 'none',
+                            userSelect: 'none',
+                          } as React.CSSProperties
+                        }
                       />
 
                       {/* Subtle micro-rim border */}
@@ -1124,7 +1148,7 @@ export const GureEtxeaSection: React.FC<GureEtxeaSectionProps> = ({ currentLang 
              ========================================================================= */}
           <div
             ref={introOverlayRef}
-            className="absolute inset-0 flex flex-col justify-between px-5 sm:px-12 lg:px-20 pt-20 sm:pt-28 pb-8 sm:pb-12 lg:pb-16 pointer-events-none will-change-transform bg-gradient-to-b from-[#07080a]/95 via-[#07080a]/70 to-[#07080a]/95 overflow-y-auto"
+            className="absolute inset-0 flex flex-col justify-between px-5 sm:px-12 lg:px-20 pt-20 sm:pt-28 pb-8 sm:pb-12 lg:pb-16 pointer-events-none will-change-transform bg-gradient-to-b from-[#07080a]/95 via-[#07080a]/70 to-[#07080a]/95 overflow-hidden"
             style={{ zIndex: 35 }}
           >
             {/* Cabecera Superior: GURE ETXEA + Título + Lead (Al frente absoluto) */}
